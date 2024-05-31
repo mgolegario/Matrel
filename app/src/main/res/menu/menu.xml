@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+<item android:title="Home"
+    android:icon="@drawable/outline_home"
+    android:id="@+id/home"/>
+
+<item
+    android:id="@+id/departamentos"
+    android:title="Departamentos"
+    android:icon="@drawable/departamentos"
+    />
+
+<item
+    android:id="@+id/favoritos"
+    android:title="Favoritos"
+    android:icon="@drawable/outline_heart_check"
+    />
+
+<item
+    android:id="@+id/conta"
+    android:title="Conta"
+    android:icon="@drawable/conta"
+    />
+</menu>

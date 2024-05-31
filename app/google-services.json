@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "104969658698",
+    "project_id": "matrel",
+    "storage_bucket": "matrel.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:104969658698:android:13e3119eb25ab3310961b3",
+        "android_client_info": {
+          "package_name": "com.example.matrel"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC43LinrMpZPFXRbNduGftflzdTjgxtztw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

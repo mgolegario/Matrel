@@ -1,0 +1,27 @@
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.Matrel" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="android:fontFamily">@font/nunito</item>
+    </style>
+    <style name="App.Custom.Indicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@color/laranja</item>
+        <item name="android:alpha">0</item>
+    </style>
+    <style name="BottomNavigationViewTextStyleActive">
+
+        <item name="android:fontFamily">@font/nunito</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/laranja</item>
+
+
+    </style>
+    <style name="BottomNavigationViewTextStyleInactive">
+
+        <item name="android:fontFamily">@font/nunito</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/cinza</item>
+    </style>
+    <style name="Theme.Matrel" parent="Base.Theme.Matrel" />
+</resources>
