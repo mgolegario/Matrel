@@ -2,7 +2,10 @@ package com.example.matrel;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toolbar;
 
@@ -22,6 +25,8 @@ public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
     private FrameLayout frameLayout;
     TextView tvHeader;
+    EditText searchBox;
+    ImageView carrinho;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +37,8 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         frameLayout = findViewById(R.id.frameLayout);
         tvHeader = findViewById(R.id.textView);
-
+        searchBox = findViewById(R.id.search_box);
+        carrinho = findViewById(R.id.carrinho);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -43,7 +49,17 @@ public class MainActivity extends AppCompatActivity {
                 int itemId = menuItem.getItemId();
 
                 if (itemId == R.id.home){
-                    tvHeader.setText("Home");
+                    searchBox.setVisibility(View.VISIBLE);
+                    carrinho.setVisibility(View.VISIBLE);
+                    tvHeader.setVisibility(View.INVISIBLE);
+                }else{
+                    searchBox.setVisibility(View.INVISIBLE);
+                    carrinho.setVisibility(View.INVISIBLE);
+                    tvHeader.setVisibility(View.VISIBLE);
+                }
+
+
+                if (itemId == R.id.home){
                     homeClicked();
                 }else if (itemId == R.id.departamentos){
                     tvHeader.setText("Departamentos");
