@@ -7,7 +7,6 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toolbar;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -20,6 +19,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
@@ -27,6 +27,8 @@ public class MainActivity extends AppCompatActivity {
     TextView tvHeader;
     EditText searchBox;
     ImageView carrinho;
+    FirebaseAuth auth;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
         tvHeader = findViewById(R.id.textView);
         searchBox = findViewById(R.id.search_box);
         carrinho = findViewById(R.id.carrinho);
+        auth = FirebaseAuth.getInstance();
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -69,7 +72,12 @@ public class MainActivity extends AppCompatActivity {
                     favoritosClicked();
                 }else if (itemId == R.id.conta){
                     tvHeader.setText("Conta");
-                    contaClicked();
+                    if(auth.getCurrentUser() != null){
+                        loadFragment(new ContaFragment());
+                    }else{
+                        loginClicked();
+                    }
+
                 }
                 if (itemId == R.id.home){
                     return true;
@@ -112,8 +120,8 @@ public class MainActivity extends AppCompatActivity {
     private void favoritosClicked(){
         loadFragment(new FavoritosFragment());
     }
-    private void contaClicked(){
-        loadFragment(new ContaFragment());
+    private void loginClicked(){
+        loadFragment(new LoginFragment());
     }
 }
 

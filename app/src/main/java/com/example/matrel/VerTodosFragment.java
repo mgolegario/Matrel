@@ -47,7 +47,7 @@ public class VerTodosFragment extends Fragment {
 
         Bundle b = this.getArguments();
 
-        if (b.getString("categoria").equals("destaque")){
+        if (b.getString("categoria")!= null && b.getString("categoria").equals("destaque")){
             categText.setText("Destaques");
             db.collection("TodosProdutos").whereEqualTo("destaque", true)
                     .get()
@@ -66,7 +66,7 @@ public class VerTodosFragment extends Fragment {
                         }
                     });
 
-        } else if (b.getString("categoria").equals("maisProcurado")){
+        } else if (b.getString("categoria")!= null && b.getString("categoria").equals("maisProcurado")){
             categText.setText("Mais Procurados");
             db.collection("TodosProdutos").whereEqualTo("maisProcurados", true)
                     .get()
@@ -84,8 +84,9 @@ public class VerTodosFragment extends Fragment {
                             }
                         }
                     });
-        }else if(b.getString("departamento").equals("notebooks")){
-            query("type","notebook");
+        }else if(b.getString("departamento")!= null){
+            categText.setText(b.getString("departamento"));
+            query("type",b.getString("departamento"));
         }
 
 

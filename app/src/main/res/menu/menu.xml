@@ -14,12 +14,12 @@
 <item
     android:id="@+id/favoritos"
     android:title="Favoritos"
-    android:icon="@drawable/outline_heart_check"
+    android:icon="@drawable/outline_favorite_border_24"
     />
 
 <item
     android:id="@+id/conta"
     android:title="Conta"
-    android:icon="@drawable/conta"
+    android:icon="@drawable/outline_person_outline_24"
     />
 </menu>

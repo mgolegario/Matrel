@@ -4,10 +4,13 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -21,7 +24,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DepartamentosFragment extends Fragment {
+public class DepartamentosFragment extends Fragment implements DepartamentosInterface{
     RecyclerView depRec;
     FirebaseFirestore db;
     List<DepartamentosModel> departamentosModelList;
@@ -38,7 +41,7 @@ public class DepartamentosFragment extends Fragment {
 
         depRec.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
         departamentosModelList = new ArrayList<>();
-        departamentosAdapter = new DepartamentosAdapter(getActivity(), departamentosModelList);
+        departamentosAdapter = new DepartamentosAdapter(getActivity(), departamentosModelList, this);
         depRec.setAdapter(departamentosAdapter);
 
         db.collection("Departamentos")
@@ -60,4 +63,22 @@ public class DepartamentosFragment extends Fragment {
 
         return view;
     }
+
+    private void loadFragment(Fragment fragment, Bundle b){
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragment.setArguments(b);
+        fragmentTransaction.replace(R.id.frameLayout, fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
+    @Override
+    public void onItemClick(int position) {
+            Bundle b = new Bundle();
+            b.putString("departamento",departamentosModelList.get(position).getNome().toString());
+            loadFragment(new VerTodosFragment(), b);
+    }
+
+
 }
