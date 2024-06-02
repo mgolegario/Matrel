@@ -14,12 +14,12 @@ import com.bumptech.glide.Glide;
 
 import java.util.List;
 
-public class DestaquesAdapter  extends RecyclerView.Adapter<DestaquesAdapter.ViewHolder>{
+public class TodosItensAdapter  extends RecyclerView.Adapter<TodosItensAdapter.ViewHolder>{
 
     private Context context;
     private List<DestaquesModel> destaquesModelList;
 
-    public DestaquesAdapter(Context context, List<DestaquesModel> destaquesModelList) {
+    public TodosItensAdapter(Context context, List<DestaquesModel> destaquesModelList) {
         this.context = context;
         this.destaquesModelList = destaquesModelList;
     }
@@ -27,15 +27,16 @@ public class DestaquesAdapter  extends RecyclerView.Adapter<DestaquesAdapter.Vie
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.destaques_item, parent, false));
+        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.todos_itens_card, parent, false));
     }
+
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            Glide.with(context).load(destaquesModelList.get(position).getImg_url()).into(holder.destImg);
-            holder.nome.setText(destaquesModelList.get(position).getNome());
-            holder.avaliacoes.setText("("+destaquesModelList.get(position).getAvaliacoes()+")");
-            holder.preco.setText("R$ " + destaquesModelList.get(position).getPreco());
+        Glide.with(context).load(destaquesModelList.get(position).getImg_url()).into(holder.destImg);
+        holder.nome.setText(destaquesModelList.get(position).getNome());
+        holder.avaliacoes.setText("("+destaquesModelList.get(position).getAvaliacoes()+")");
+        holder.preco.setText("R$ " + destaquesModelList.get(position).getPreco());
     }
 
     @Override
@@ -49,10 +50,10 @@ public class DestaquesAdapter  extends RecyclerView.Adapter<DestaquesAdapter.Vie
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            destImg = itemView.findViewById(R.id.destaques_img);
-            nome = itemView.findViewById(R.id.destaques_text);
-            avaliacoes = itemView.findViewById(R.id.avaliacoes);
-            preco = itemView.findViewById(R.id.preco_rec);
+            destImg = itemView.findViewById(R.id.img_todos);
+            nome = itemView.findViewById(R.id.nome_todos);
+            avaliacoes = itemView.findViewById(R.id.avaliacoes_todos);
+            preco = itemView.findViewById(R.id.preco_todos);
         }
     }
 }
