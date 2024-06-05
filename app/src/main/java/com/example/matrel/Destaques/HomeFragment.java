@@ -1,6 +1,4 @@
-package com.example.matrel;
-
-import static android.content.Intent.getIntent;
+package com.example.matrel.Destaques;
 
 import android.os.Bundle;
 
@@ -17,6 +15,9 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.example.matrel.Produto.ProdutoFragment;
+import com.example.matrel.R;
+import com.example.matrel.VerTodos.VerTodosFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -26,7 +27,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements DestaquesInterface {
 
     RecyclerView destaquesRec;
     FirebaseFirestore db;
@@ -45,7 +46,7 @@ public class HomeFragment extends Fragment {
 
         destaquesRec.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false));
         destaquesModelList = new ArrayList<>();
-        destaquesAdapter = new DestaquesAdapter(getActivity(), destaquesModelList);
+        destaquesAdapter = new DestaquesAdapter(getActivity(), destaquesModelList, this);
         destaquesRec.setAdapter(destaquesAdapter);
         verTodosdstq = v.findViewById(R.id.verTodosLLdstq);
         verTodosmsprd = v.findViewById(R.id.verTodosLLmsprd);
@@ -98,5 +99,12 @@ public class HomeFragment extends Fragment {
         fragmentTransaction.replace(R.id.frameLayout, fragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        Bundle b = new Bundle();
+        b.putString("nome",destaquesModelList.get(position).getNome().toString());
+        loadFragment(new ProdutoFragment(), b);
     }
 }

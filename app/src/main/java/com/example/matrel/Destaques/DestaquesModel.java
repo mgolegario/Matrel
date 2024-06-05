@@ -1,4 +1,4 @@
-package com.example.matrel;
+package com.example.matrel.Destaques;
 
 public class DestaquesModel {
     String nome;

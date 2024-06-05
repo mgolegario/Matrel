@@ -1,4 +1,4 @@
-package com.example.matrel;
+package com.example.matrel.Auths;
 
 import android.os.Bundle;
 
@@ -17,6 +17,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.matrel.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -90,6 +91,7 @@ FirebaseAuth auth;
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
                             Toast.makeText(getActivity(), "Login concluído", Toast.LENGTH_SHORT).show();
+                            loadFragment(new ContaFragment());
                         }else {
                             Toast.makeText(getActivity(), "Error:"+task.getException(), Toast.LENGTH_SHORT).show();
                         }

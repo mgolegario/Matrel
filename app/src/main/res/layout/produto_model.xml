@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Produto.ProdutoFragment">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#0a0a0a"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                android:id="@+id/nomeProd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nunito_black"
+                android:text="Placa de Vídeo RTX 3060 Ventus 2X MSI NVIDIA GeForce, 12GB GDDR6, DLSS, Ray Tracing - RTX 3060 Ventus 2X 12G OC"
+                android:textColor="#d2d2d2"
+                android:textSize="16sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal">
+
+
+                <ImageView
+                    android:id="@+id/imageView9"
+                    android:layout_width="83dp"
+                    android:layout_height="17dp"
+                    android:layout_weight="0"
+                    android:src="@drawable/rating"
+                    app:tint="#a2a2a2" />
+
+                <TextView
+                    android:id="@+id/avalProd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="(457)"
+                    android:textColor="#a2a2a2"
+                    android:textSize="12sp" />
+
+                <ImageView
+                    android:id="@+id/imageView10"
+                    android:layout_width="17dp"
+                    android:layout_height="17dp"
+                    android:layout_weight="0"
+                    android:src="@drawable/outline_favorite_border_24"
+                    app:tint="#a2a2a2" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/imgProd"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_marginTop="20dp"
+                android:src="@drawable/hardware" />
+
+            <TextView
+                android:id="@+id/precoProd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/nunito_black"
+                android:text="R$ 1799.99"
+                android:textColor="@color/laranja"
+                android:textSize="20dp" />
+
+            <Button
+                android:id="@+id/btnComprar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:backgroundTint="@color/laranja"
+                android:fontFamily="@font/nunito_extrabold"
+                android:text="COMPRAR"
+                android:textColor="#f2f2f2"
+                android:textSize="20sp"
+                app:cornerRadius="10dp" />
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:background="#555555"
+                android:layout_marginTop="20dp"/>
+
+            <TextView
+                android:id="@+id/textView20"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:fontFamily="@font/nunito_black"
+                android:text="DESCRIÇÃO DO PRODUTO"
+                android:textColor="#d2d2d2"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/descProd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nunito"
+                android:layout_marginTop="15dp"
+                android:text="Jogue os jogos mais recentes usando o poder da Ampere — a arquitetura RTX de 2ª geração da NVIDIA. Obtenha um desempenho incrível com Ray Tracing Cores e Tensor Cores aprimorados, novos multiprocessadores de streaming e memória G6 de alta velocidade.\n\n  Mantendo o essencial para realizar qualquer tarefa em mãos. Balançar um arranjo de ventilador duplo confiável em um design industrial rígido permite que esta placa gráfica de aparência nítida se encaixe em qualquer construção."
+                android:textColor="#d2d2d2" />
+
+        </LinearLayout>
+</FrameLayout>

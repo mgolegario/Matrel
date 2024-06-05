@@ -1,4 +1,4 @@
-package com.example.matrel;
+package com.example.matrel.Departamentos;
 
 public interface DepartamentosInterface {
     void onItemClick(int position);

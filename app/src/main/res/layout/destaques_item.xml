@@ -42,8 +42,8 @@
                 android:layout_width="15dp"
                 android:layout_height="15dp"
                 android:layout_weight="0.2"
-                app:srcCompat="@drawable/favoritos"
-                app:tint="#111111" />
+                app:srcCompat="@drawable/outline_favorite_border_24"
+                app:tint="#525252"  />
 
             <ImageView
                 android:id="@+id/imageView8"
@@ -94,7 +94,7 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/btnComprarCard1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"

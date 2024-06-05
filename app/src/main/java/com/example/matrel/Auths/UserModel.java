@@ -1,4 +1,4 @@
-package com.example.matrel;
+package com.example.matrel.Auths;
 
 public class UserModel {
     String name;

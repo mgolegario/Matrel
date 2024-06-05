@@ -10,10 +10,10 @@ import android.view.ViewGroup;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link ContaFragment#newInstance} factory method to
+ * Use the {@link MeusPedidosFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ContaFragment extends Fragment {
+public class MeusPedidosFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -24,7 +24,7 @@ public class ContaFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public ContaFragment() {
+    public MeusPedidosFragment() {
         // Required empty public constructor
     }
 
@@ -34,11 +34,11 @@ public class ContaFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment ContaFragment.
+     * @return A new instance of fragment MeusPedidosFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static ContaFragment newInstance(String param1, String param2) {
-        ContaFragment fragment = new ContaFragment();
+    public static MeusPedidosFragment newInstance(String param1, String param2) {
+        MeusPedidosFragment fragment = new MeusPedidosFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -59,6 +59,6 @@ public class ContaFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_conta, container, false);
+        return inflater.inflate(R.layout.fragment_meus_pedidos, container, false);
     }
 }

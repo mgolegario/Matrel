@@ -18,6 +18,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.matrel.Auths.ContaFragment;
+import com.example.matrel.Auths.LoginFragment;
+import com.example.matrel.Departamentos.DepartamentosFragment;
+import com.example.matrel.Destaques.HomeFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -73,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
                 }else if (itemId == R.id.conta){
                     tvHeader.setText("Conta");
                     if(auth.getCurrentUser() != null){
+
                         loadFragment(new ContaFragment());
                     }else{
                         loginClicked();
@@ -92,6 +97,13 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
+
+        Fragment myFragment = (Fragment) getSupportFragmentManager().findFragmentByTag("produto");
+        if (myFragment != null && myFragment.isVisible()) {
+
+            tvHeader.setVisibility(View.VISIBLE);
+            searchBox.setVisibility(View.INVISIBLE);
+        }
 
        homeClicked();
 
