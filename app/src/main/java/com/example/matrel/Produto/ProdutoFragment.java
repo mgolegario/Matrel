@@ -16,16 +16,20 @@ import android.widget.Toast;
 import com.example.matrel.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-public class ProdutoFragment extends Fragment{
+public class ProdutoFragment extends Fragment implements ProdutoInterface{
     RecyclerView prodRec;
     FirebaseFirestore db;
+    FirebaseAuth auth;
     List<ProdutoModel> produtoModelList;
     ProdutoAdapter produtoAdapter;
     String nome;
@@ -37,10 +41,10 @@ public class ProdutoFragment extends Fragment{
         View view = inflater.inflate(R.layout.fragment_produto, container, false);
         db = FirebaseFirestore.getInstance();
         prodRec = view.findViewById(R.id.recProd);
-
+        auth = FirebaseAuth.getInstance();
         prodRec.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
         produtoModelList = new ArrayList<>();
-        produtoAdapter = new ProdutoAdapter(getActivity(), produtoModelList);
+        produtoAdapter = new ProdutoAdapter(getActivity(), produtoModelList, this);
         prodRec.setAdapter(produtoAdapter);
         b = this.getArguments();
 
@@ -68,5 +72,20 @@ public class ProdutoFragment extends Fragment{
         }
 
         return view;
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        final HashMap<String,Object> carrinhoMap = new HashMap<>();
+        carrinhoMap.put("nome", produtoModelList.get(position).getNome());
+        carrinhoMap.put("preco", produtoModelList.get(position).getPreco());
+
+        db.collection("AddToCart").document(auth.getCurrentUser().getUid())
+                .collection("CurrentUser").add(carrinhoMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentReference> task) {
+                        Toast.makeText(getContext(), "Adicionado ao carrinho", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 }

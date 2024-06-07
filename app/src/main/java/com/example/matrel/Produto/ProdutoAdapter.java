@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,24 +16,26 @@ import com.example.matrel.Departamentos.DepartamentosInterface;
 import com.example.matrel.Departamentos.DepartamentosModel;
 import com.example.matrel.R;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class ProdutoAdapter  extends RecyclerView.Adapter<ProdutoAdapter.ViewHolder>{
 
-
+    private ProdutoInterface produtoInterface;
     private Context context;
     private List<ProdutoModel> produtoModelList;
 
-    public ProdutoAdapter(Context context, List<ProdutoModel> produtoModelList) {
+    public ProdutoAdapter(Context context, List<ProdutoModel> produtoModelList, ProdutoInterface produtoInterface) {
         this.context = context;
         this.produtoModelList = produtoModelList;
+        this.produtoInterface = produtoInterface;
 
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.produto_model, parent, false));
+        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.produto_model, parent, false), produtoInterface);
     }
 
     @Override
@@ -52,7 +55,8 @@ public class ProdutoAdapter  extends RecyclerView.Adapter<ProdutoAdapter.ViewHol
     public class ViewHolder extends RecyclerView.ViewHolder{
         ImageView prodImg;
         TextView nome, descricao, preco, avaliacoes;
-        public ViewHolder(@NonNull View itemView) {
+        Button btn;
+        public ViewHolder(@NonNull View itemView, ProdutoInterface produtoInterface) {
             super(itemView);
 
             prodImg = itemView.findViewById(R.id.imgProd);
@@ -60,6 +64,20 @@ public class ProdutoAdapter  extends RecyclerView.Adapter<ProdutoAdapter.ViewHol
             descricao = itemView.findViewById(R.id.descProd);
             preco = itemView.findViewById(R.id.precoProd);
             avaliacoes = itemView.findViewById(R.id.avalProd);
+            btn = itemView.findViewById(R.id.btnComprar);
+
+            btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(produtoInterface != null){
+                        int position = getAdapterPosition();
+
+                        if (position != RecyclerView.NO_POSITION){
+                            produtoInterface.onItemClick(position);
+                        }
+                    }
+                }
+            });
 
 
         }

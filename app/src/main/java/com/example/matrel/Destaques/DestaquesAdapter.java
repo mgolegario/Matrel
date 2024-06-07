@@ -12,7 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.matrel.Departamentos.DepartamentosInterface;
 import com.example.matrel.R;
 
 import java.util.List;
@@ -32,7 +31,7 @@ public class DestaquesAdapter  extends RecyclerView.Adapter<DestaquesAdapter.Vie
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.destaques_item, parent, false), destaquesInterface);
+        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.destaques_card, parent, false), destaquesInterface);
     }
 
     @Override
