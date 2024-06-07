@@ -20,6 +20,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.matrel.Auths.ContaFragment;
 import com.example.matrel.Auths.LoginFragment;
+import com.example.matrel.Carrinho.CarrinhoFragment;
 import com.example.matrel.Departamentos.DepartamentosFragment;
 import com.example.matrel.Destaques.HomeFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -107,7 +108,12 @@ public class MainActivity extends AppCompatActivity {
 
        homeClicked();
 
-
+carrinho.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View v) {
+        loadFragment(new CarrinhoFragment());
+    }
+});
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -115,7 +121,6 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
     }
-
 
     private void loadFragment(Fragment fragment){
         FragmentManager fragmentManager = getSupportFragmentManager();
