@@ -17,18 +17,25 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.matrel.Carrinho.CarrinhoModel;
 import com.example.matrel.R;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.List;
 
 public class CarrinhoAdapter extends RecyclerView.Adapter<CarrinhoAdapter.ViewHolder>{
 
     private FirebaseFirestore db;
+    private String nomeProd;
     private Integer quantidade_num;
+    private Integer quantidade_num2;
     private Float precoNovo;
     private Float precoAntigo;
     private FirebaseAuth auth;
@@ -49,14 +56,43 @@ public class CarrinhoAdapter extends RecyclerView.Adapter<CarrinhoAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+
         Glide.with(context).load(carrinhoModelList.get(position).getImg_url()).into(holder.cartImg);
         holder.nome.setText(carrinhoModelList.get(position).getNome());
+        nomeProd = carrinhoModelList.get(position).getNome();
         holder.quantidade.setText(""+carrinhoModelList.get(position).getQuantidade());
         Integer quant;
         quant = carrinhoModelList.get(position).getQuantidade();
         precoAntigo = carrinhoModelList.get(position).getPreco() / quant;
         holder.preco.setText("R$ " + precoAntigo * quant);
+
+        holder.aumentar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                quantidade_num2 = Integer.parseInt(holder.quantidade.getText().toString());
+                quantidade_num = Integer.parseInt(holder.quantidade.getText().toString()) + 1;
+                holder.quantidade.setText("" + quantidade_num);
+               quantidadePreco(position);
+                holder.preco.setText(""+precoNovo);
+            }
+        });
+
+        holder.diminuir.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                quantidade_num = Integer.parseInt(holder.quantidade.getText().toString());
+                quantidade_num2 = Integer.parseInt(holder.quantidade.getText().toString());
+                if (quantidade_num != 1) {
+                    quantidade_num -= 1;
+                    holder.quantidade.setText("" + quantidade_num);
+                }
+              quantidadePreco(position);
+
+            }
+        });
+
     }
+
 
     @Override
     public int getItemCount() {
@@ -78,43 +114,30 @@ public class CarrinhoAdapter extends RecyclerView.Adapter<CarrinhoAdapter.ViewHo
             aumentar = itemView.findViewById(R.id.aumentar);
             diminuir = itemView.findViewById(R.id.diminuir);
 
-            aumentar.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
 
-                quantidade_num = Integer.parseInt(quantidade.getText().toString()) + 1;
-                quantidade.setText("" + quantidade_num);
-                auth = FirebaseAuth.getInstance();
-                    db = FirebaseFirestore.getInstance();
-                    db.collection("AddToCart").document(auth.getCurrentUser().getUid())
-                            .collection("CurrentUser").document("O2PU9QX9qX6jYdvLLdC3").update("quantidade", quantidade_num);
-
-                    precoNovo = precoAntigo * quantidade_num;
-                    db.collection("AddToCart").document(auth.getCurrentUser().getUid())
-                            .collection("CurrentUser").document("O2PU9QX9qX6jYdvLLdC3").update("preco", precoNovo);
-                    preco.setText("R$ "+precoNovo);
-                }
-            });
-            diminuir.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    quantidade_num = Integer.parseInt(quantidade.getText().toString());
-                    if (quantidade_num != 1){
-                        quantidade_num -= 1;
-                        quantidade.setText(""+quantidade_num);
-                        auth = FirebaseAuth.getInstance();
-                        db = FirebaseFirestore.getInstance();
-                        db.collection("AddToCart").document(auth.getCurrentUser().getUid())
-                                .collection("CurrentUser").document("O2PU9QX9qX6jYdvLLdC3").update("quantidade", quantidade_num);
-                        precoNovo = precoAntigo * quantidade_num;
-                        db.collection("AddToCart").document(auth.getCurrentUser().getUid())
-                                .collection("CurrentUser").document("O2PU9QX9qX6jYdvLLdC3").update("preco", precoNovo);
-                        preco.setText("R$ "+precoNovo);
-                    }
-
-                }
-            });
 
         }
     }
-}
+
+    private void quantidadePreco(int position){
+        auth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
+        db.collection("AddToCart").document(auth.getCurrentUser().getUid())
+                .collection("CurrentUser").whereEqualTo("nome", carrinhoModelList.get(position).getNome()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            String produto = document.getId();
+                            db.collection("AddToCart").document(auth.getCurrentUser().getUid())
+                                    .collection("CurrentUser").document(produto).update("quantidade", quantidade_num);
+
+                            precoNovo = carrinhoModelList.get(position).getPreco()/quantidade_num2 * quantidade_num;
+                            db.collection("AddToCart").document(auth.getCurrentUser().getUid())
+                                    .collection("CurrentUser").document(produto).update("preco", precoNovo);
+                        }
+                    }
+                });
+    }
+    }
+
+
