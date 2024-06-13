@@ -23,6 +23,7 @@ import com.example.matrel.Auths.LoginFragment;
 import com.example.matrel.Carrinho.CarrinhoFragment;
 import com.example.matrel.Departamentos.DepartamentosFragment;
 import com.example.matrel.Destaques.HomeFragment;
+import com.example.matrel.Favoritos.FavoritosFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
