@@ -75,18 +75,38 @@ public class ProdutoFragment extends Fragment implements ProdutoInterface{
     }
 
     @Override
-    public void onItemClick(int position) {
-        final HashMap<String,Object> carrinhoMap = new HashMap<>();
-        carrinhoMap.put("nome", produtoModelList.get(position).getNome());
-        carrinhoMap.put("preco", produtoModelList.get(position).getPreco());
-        carrinhoMap.put("img_url", produtoModelList.get(position).getImg_url());
+    public void onItemClick(int position, int qualApertou) {
 
-        db.collection("AddToCart").document(auth.getCurrentUser().getUid())
-                .collection("CurrentUser").add(carrinhoMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentReference> task) {
-                        Toast.makeText(getContext(), "Adicionado ao carrinho", Toast.LENGTH_SHORT).show();
-                    }
-                });
+        if (qualApertou == 0) {
+            final HashMap<String, Object> carrinhoMap = new HashMap<>();
+            carrinhoMap.put("nome", produtoModelList.get(position).getNome());
+            carrinhoMap.put("preco", produtoModelList.get(position).getPreco());
+            carrinhoMap.put("img_url", produtoModelList.get(position).getImg_url());
+
+            db.collection("AddToCart").document(auth.getCurrentUser().getUid())
+                    .collection("CurrentUser").add(carrinhoMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentReference> task) {
+                            Toast.makeText(getContext(), "Adicionado ao carrinho", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }else if (qualApertou == 1){
+            final HashMap<String, Object> favMap = new HashMap<>();
+            favMap.put("nome", produtoModelList.get(position).getNome());
+            favMap.put("preco", produtoModelList.get(position).getPreco());
+            favMap.put("img_url", produtoModelList.get(position).getImg_url());
+            favMap.put("avaliacoes", produtoModelList.get(position).getAvaliacoes());
+            favMap.put("type", produtoModelList.get(position).getType());
+            favMap.put("destaque", produtoModelList.get(position).getDestaque());
+            favMap.put("procurado", produtoModelList.get(position).getProcurado());
+
+            db.collection("Favoritos").document(auth.getCurrentUser().getUid())
+                    .collection("CurrentUser").add(favMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentReference> task) {
+                            Toast.makeText(getContext(), "Adicionado aos favoritos", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
     }
 }

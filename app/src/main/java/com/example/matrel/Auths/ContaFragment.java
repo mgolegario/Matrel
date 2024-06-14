@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.matrel.Favoritos.FavoritosFragment;
 import com.example.matrel.MeusDadosFragment;
 import com.example.matrel.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -41,6 +42,7 @@ public class ContaFragment extends Fragment {
         tvMeusDados = view.findViewById(R.id.tvMeusDados);
         tvNome = view.findViewById(R.id.nomeCompleto);
         tvEmail = view.findViewById(R.id.emailDisplay);
+        tvFavoritos = view.findViewById(R.id.tvFavoritos);
         tvSair = view.findViewById(R.id.tvSair);
         db = FirebaseDatabase.getInstance().getReference();
 
@@ -72,7 +74,12 @@ public class ContaFragment extends Fragment {
             }
         });
 
-
+        tvFavoritos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadFragment(new FavoritosFragment());
+            }
+        });
 
         return view;
 

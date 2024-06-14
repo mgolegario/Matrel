@@ -34,9 +34,9 @@ public class CarrinhoAdapter extends RecyclerView.Adapter<CarrinhoAdapter.ViewHo
 
     private FirebaseFirestore db;
     private String nomeProd;
+    private Float total;
     private Integer quantidade_num;
-    private Integer quantidade_num2;
-    private Float precoNovo;
+    private Float precoNovo, tudo;
     private Float precoAntigo;
     private FirebaseAuth auth;
     private Context context;
@@ -66,13 +66,23 @@ public class CarrinhoAdapter extends RecyclerView.Adapter<CarrinhoAdapter.ViewHo
         precoAntigo = carrinhoModelList.get(position).getPreco() / quant;
         holder.preco.setText("R$ " + precoAntigo * quant);
 
+
+        auth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
+        if (tudo== null){
+            tudo = 0f;
+        }
+        total = carrinhoModelList.get(position).getPreco();
+
+        tudo += total;
+        db.collection("AddToCart").document(auth.getCurrentUser().getUid())
+                .update("valorTotal", tudo);
         holder.aumentar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                quantidade_num2 = Integer.parseInt(holder.quantidade.getText().toString());
                 quantidade_num = Integer.parseInt(holder.quantidade.getText().toString()) + 1;
                 holder.quantidade.setText("" + quantidade_num);
-               quantidadePreco(position);
+                quantidadePreco(position);
                 holder.preco.setText(""+precoNovo);
             }
         });
@@ -81,13 +91,12 @@ public class CarrinhoAdapter extends RecyclerView.Adapter<CarrinhoAdapter.ViewHo
             @Override
             public void onClick(View v) {
                 quantidade_num = Integer.parseInt(holder.quantidade.getText().toString());
-                quantidade_num2 = Integer.parseInt(holder.quantidade.getText().toString());
                 if (quantidade_num != 1) {
                     quantidade_num -= 1;
                     holder.quantidade.setText("" + quantidade_num);
                 }
-              quantidadePreco(position);
-
+                quantidadePreco(position);
+                holder.preco.setText(""+precoNovo);
             }
         });
 
@@ -101,8 +110,7 @@ public class CarrinhoAdapter extends RecyclerView.Adapter<CarrinhoAdapter.ViewHo
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         ImageView cartImg;
-
-        TextView nome, preco, quantidade;
+        TextView nome, preco, quantidade, precoTotal;
         ImageView aumentar, diminuir;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -114,14 +122,10 @@ public class CarrinhoAdapter extends RecyclerView.Adapter<CarrinhoAdapter.ViewHo
             aumentar = itemView.findViewById(R.id.aumentar);
             diminuir = itemView.findViewById(R.id.diminuir);
 
-
-
         }
     }
 
     private void quantidadePreco(int position){
-        auth = FirebaseAuth.getInstance();
-        db = FirebaseFirestore.getInstance();
         db.collection("AddToCart").document(auth.getCurrentUser().getUid())
                 .collection("CurrentUser").whereEqualTo("nome", carrinhoModelList.get(position).getNome()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -130,8 +134,7 @@ public class CarrinhoAdapter extends RecyclerView.Adapter<CarrinhoAdapter.ViewHo
                             String produto = document.getId();
                             db.collection("AddToCart").document(auth.getCurrentUser().getUid())
                                     .collection("CurrentUser").document(produto).update("quantidade", quantidade_num);
-
-                            precoNovo = carrinhoModelList.get(position).getPreco()/quantidade_num2 * quantidade_num;
+                            precoNovo = carrinhoModelList.get(position).getPreco()/ carrinhoModelList.get(position).getQuantidade() * quantidade_num;
                             db.collection("AddToCart").document(auth.getCurrentUser().getUid())
                                     .collection("CurrentUser").document(produto).update("preco", precoNovo);
                         }

@@ -3,33 +3,77 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".Carrinho.CarrinhoFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="#0A0A0A">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/carrinho_rec"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        android:background="#0A0A0A"
+        android:orientation="vertical">
 
-        </androidx.recyclerview.widget.RecyclerView>
-
-        <TextView
-            android:id="@+id/tv_Total"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="TextView" />
-
-        <Button
-            android:id="@+id/btn_compra_carrinho"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="COMPRAR" />
+            android:background="#0A0A0A"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingTop="20dp">
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/carrinho_rec"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            </androidx.recyclerview.widget.RecyclerView>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv123"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:fontFamily="@font/nunito_extrabold"
+                android:text="Total:"
+                android:textColor="#d2d2d2"
+                android:textSize="20dp" />
+
+            <TextView
+                android:id="@+id/tv_Total"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:fontFamily="@font/nunito_black"
+                android:text="R$ 1799.99"
+                android:textColor="@color/laranja"
+                android:textSize="20dp" />
+
+            <Button
+                android:id="@+id/btn_compra_carrinho"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="10dp"
+                android:backgroundTint="@color/laranja"
+                android:fontFamily="@font/nunito_extrabold"
+                android:text="COMPRAR"
+                android:textColor="#f2f2f2"
+                android:textSize="20sp"
+                app:cornerRadius="10dp" />
+        </LinearLayout>
     </LinearLayout>
 
 </FrameLayout>

@@ -53,9 +53,10 @@ public class ProdutoAdapter  extends RecyclerView.Adapter<ProdutoAdapter.ViewHol
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-        ImageView prodImg;
+        ImageView prodImg, coracao;
         TextView nome, descricao, preco, avaliacoes;
         Button btn;
+
         public ViewHolder(@NonNull View itemView, ProdutoInterface produtoInterface) {
             super(itemView);
 
@@ -65,7 +66,7 @@ public class ProdutoAdapter  extends RecyclerView.Adapter<ProdutoAdapter.ViewHol
             preco = itemView.findViewById(R.id.precoProd);
             avaliacoes = itemView.findViewById(R.id.avalProd);
             btn = itemView.findViewById(R.id.btnComprar);
-
+            coracao = itemView.findViewById(R.id.coracaoProd);
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -73,11 +74,24 @@ public class ProdutoAdapter  extends RecyclerView.Adapter<ProdutoAdapter.ViewHol
                         int position = getAdapterPosition();
 
                         if (position != RecyclerView.NO_POSITION){
-                            produtoInterface.onItemClick(position);
+                            produtoInterface.onItemClick(position, 0);
                         }
                     }
                 }
             });
+            coracao.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(produtoInterface != null){
+                        int position = getAdapterPosition();
+
+                        if (position != RecyclerView.NO_POSITION){
+                            produtoInterface.onItemClick(position, 1);
+                        }
+                    }
+                }
+            });
+
 
 
         }

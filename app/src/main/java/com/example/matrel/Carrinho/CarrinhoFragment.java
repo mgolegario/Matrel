@@ -10,6 +10,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.matrel.Produto.ProdutoAdapter;
@@ -18,6 +21,7 @@ import com.example.matrel.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -31,6 +35,8 @@ public class CarrinhoFragment extends Fragment{
     FirebaseAuth auth;
     List<CarrinhoModel> carrinhoModelList;
     CarrinhoAdapter carrinhoAdapter;
+    Button btnCompra;
+    TextView total;
 
 
     @Override
@@ -46,6 +52,7 @@ public class CarrinhoFragment extends Fragment{
         carrinhoModelList = new ArrayList<>();
         carrinhoAdapter = new CarrinhoAdapter(getActivity(), carrinhoModelList);
         carrinhoRec.setAdapter(carrinhoAdapter);
+        total = view.findViewById(R.id.tv_Total);
 
 
         db.collection("AddToCart").document(auth.getCurrentUser().getUid())
@@ -65,6 +72,16 @@ public class CarrinhoFragment extends Fragment{
                             }
                         }
                     });
+
+        db.collection("AddToCart").document(auth.getCurrentUser().getUid()).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        String valor = task.getResult().get("valorTotal").toString();
+                        Float valorConv = Math.round(Float.parseFloat(valor) * 100) / 100.0F;
+                        total.setText("R$ "+valorConv);
+                    }
+                });
 
         return view;
     }
