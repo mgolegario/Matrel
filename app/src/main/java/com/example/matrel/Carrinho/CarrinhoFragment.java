@@ -3,6 +3,7 @@ package com.example.matrel.Carrinho;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,7 +23,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -73,15 +76,15 @@ public class CarrinhoFragment extends Fragment{
                         }
                     });
 
-        db.collection("AddToCart").document(auth.getCurrentUser().getUid()).get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        String valor = task.getResult().get("valorTotal").toString();
-                        Float valorConv = Math.round(Float.parseFloat(valor) * 100) / 100.0F;
-                        total.setText("R$ "+valorConv);
-                    }
-                });
+db.collection("AddToCart").document(auth.getCurrentUser().getUid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+    @Override
+    public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+        String valor = value.get("valorTotal").toString();
+        Float valorConv = Math.round(Float.parseFloat(valor) * 100) / 100.0F;
+        total.setText("R$ "+valorConv);
+    }
+});
+
 
         return view;
     }

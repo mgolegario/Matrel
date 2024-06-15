@@ -82,8 +82,14 @@ public class CarrinhoAdapter extends RecyclerView.Adapter<CarrinhoAdapter.ViewHo
             public void onClick(View v) {
                 quantidade_num = Integer.parseInt(holder.quantidade.getText().toString()) + 1;
                 holder.quantidade.setText("" + quantidade_num);
+
                 quantidadePreco(position);
-                holder.preco.setText(""+precoNovo);
+                    holder.preco.setText("R$ "+  carrinhoModelList.get(position).getPreco()/ carrinhoModelList.get(position).getQuantidade() * quantidade_num);
+                total = carrinhoModelList.get(position).getPreco()/carrinhoModelList.get(position).getQuantidade();
+
+                tudo += total;
+                db.collection("AddToCart").document(auth.getCurrentUser().getUid())
+                        .update("valorTotal", tudo);
             }
         });
 
@@ -95,8 +101,15 @@ public class CarrinhoAdapter extends RecyclerView.Adapter<CarrinhoAdapter.ViewHo
                     quantidade_num -= 1;
                     holder.quantidade.setText("" + quantidade_num);
                 }
+
                 quantidadePreco(position);
-                holder.preco.setText(""+precoNovo);
+                    holder.preco.setText("R$ "+  carrinhoModelList.get(position).getPreco()/ carrinhoModelList.get(position).getQuantidade() * quantidade_num);
+                total = carrinhoModelList.get(position).getPreco()/carrinhoModelList.get(position).getQuantidade();
+
+                tudo -= total;
+                db.collection("AddToCart").document(auth.getCurrentUser().getUid())
+                        .update("valorTotal", tudo);
+
             }
         });
 
@@ -137,9 +150,11 @@ public class CarrinhoAdapter extends RecyclerView.Adapter<CarrinhoAdapter.ViewHo
                             precoNovo = carrinhoModelList.get(position).getPreco()/ carrinhoModelList.get(position).getQuantidade() * quantidade_num;
                             db.collection("AddToCart").document(auth.getCurrentUser().getUid())
                                     .collection("CurrentUser").document(produto).update("preco", precoNovo);
+
                         }
                     }
                 });
+
     }
     }
 
