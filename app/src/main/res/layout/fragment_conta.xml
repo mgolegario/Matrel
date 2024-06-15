@@ -136,21 +136,6 @@
                 />
 
 
-            <TextView
-                android:id="@+id/tvEnderecos"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableStart="@drawable/outline_location_on_24"
-                android:drawableEnd="@drawable/baseline_arrow_forward_ios_24"
-                android:fontFamily="@font/nunito_semibold"
-                android:drawableTint="#F2F2F2"
-                android:padding="15dp"
-                android:drawablePadding="15dp"
-                android:text="Endereços"
-                android:textColor="#F2F2F2"
-                android:textSize="16sp" />
-
-
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"

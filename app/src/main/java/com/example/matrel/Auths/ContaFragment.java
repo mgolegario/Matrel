@@ -28,7 +28,7 @@ import java.util.List;
 
 public class ContaFragment extends Fragment {
 
-    TextView tvMeusDados, tvMeusPedidos, tvFavoritos, tvEnderecos, tvCartoes, tvSair, tvNome, tvEmail;
+    TextView tvMeusDados, tvMeusPedidos, tvFavoritos, tvCartoes, tvSair, tvNome, tvEmail;
     Integer FragmentSelector;
     DatabaseReference db;
     FirebaseAuth auth;

@@ -32,7 +32,7 @@ public class FavoritosAdapter extends RecyclerView.Adapter<FavoritosAdapter.View
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.ver_todos_card, parent, false), favoritosInterface);
+        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.favoritos_card, parent, false), favoritosInterface);
     }
 
 
