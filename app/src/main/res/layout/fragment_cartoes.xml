@@ -3,12 +3,92 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CartoesFragment">
+    tools:context=".Opcoes.CartoesFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:orientation="vertical"
+        android:background="#0a0a0a"
+        android:padding="10dp">
 
+    <TextView
+        android:id="@+id/textView76"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Nome do titular"
+        android:fontFamily="@font/nunito_extrabold"
+        android:textColor="#d2d2d2"
+        />
+
+    <EditText
+        android:id="@+id/edtNomeTitular2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edt_box"
+        android:layout_marginTop="3dp"
+        android:ems="10"
+        android:inputType="text"
+        android:textColor="#0f0f0f"
+        />
+
+    <TextView
+        android:id="@+id/textView27"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/nunito_extrabold"
+        android:textColor="#d2d2d2"
+        android:text="Número do Cartão" />
+
+    <EditText
+        android:id="@+id/edtNumCartao2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:background="@drawable/edt_box"
+        android:ems="10"
+        android:textColor="#0f0f0f"
+        android:inputType="number" />
+
+    <TextView
+        android:id="@+id/textView28"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/nunito_extrabold"
+        android:layout_marginTop="10dp"
+        android:textColor="#d2d2d2"
+        android:text="Código de Segurança" />
+
+    <EditText
+        android:id="@+id/edtCodSeg2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edt_box"
+        android:layout_marginTop="3dp"
+        android:ems="10"
+        android:textColor="#0f0f0f"
+        android:inputType="number" />
+
+    <TextView
+        android:id="@+id/textView29"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/nunito_extrabold"
+        android:textColor="#d2d2d2"
+
+        android:text="Data de Validade" />
+
+    <EditText
+        android:id="@+id/edtDataValid2"
+        android:background="@drawable/edt_box"
+        android:layout_marginTop="3dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:textColor="#0f0f0f"
+        android:inputType="date" />
+    </LinearLayout>
 </FrameLayout>

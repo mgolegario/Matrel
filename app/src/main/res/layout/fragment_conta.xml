@@ -52,7 +52,7 @@
                     android:fontFamily="@font/nunito_extrabold"
                     android:textSize="16sp"
                     android:textColor="#F2F2F2"
-                    android:text="Usuário do Usuário" />
+                    android:text="" />
 
                 <TextView
                     android:id="@+id/emailDisplay"
@@ -61,7 +61,7 @@
                     android:fontFamily="@font/nunito"
                     android:textSize="14sp"
                     android:textColor="#F2F2F2"
-                    android:text="usuario@gmail.com" />
+                    android:text="" />
             </LinearLayout>
 
         </LinearLayout>

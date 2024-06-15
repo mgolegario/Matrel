@@ -34,10 +34,8 @@ public class CarrinhoAdapter extends RecyclerView.Adapter<CarrinhoAdapter.ViewHo
 
     private FirebaseFirestore db;
     private String nomeProd;
-    private Float total;
     private Integer quantidade_num;
-    private Float precoNovo, tudo;
-    private Float precoAntigo;
+    private Float precoNovo, tudo, precoAntigo, total;
     private FirebaseAuth auth;
     private Context context;
     private List<CarrinhoModel> carrinhoModelList;

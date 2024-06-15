@@ -82,7 +82,7 @@ public class ProdutoFragment extends Fragment implements ProdutoInterface{
             carrinhoMap.put("nome", produtoModelList.get(position).getNome());
             carrinhoMap.put("preco", produtoModelList.get(position).getPreco());
             carrinhoMap.put("img_url", produtoModelList.get(position).getImg_url());
-
+            carrinhoMap.put("quantidade", 1);
             db.collection("AddToCart").document(auth.getCurrentUser().getUid())
                     .collection("CurrentUser").add(carrinhoMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                         @Override

@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".Auths.CadastroFragment">
 
 
@@ -12,6 +13,7 @@
         android:orientation="vertical"
         android:background="#0A0A0A"
         android:gravity="center"
+        android:padding="10dp"
         >
 
         <TextView
@@ -20,47 +22,80 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/nunito_extrabold"
             android:text="CADASTRO"
+            android:textSize="20dp"
             android:textColor="@color/laranja" />
-
+        <TextView
+            android:id="@+id/textView11"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nunito_extrabold"
+            android:layout_marginTop="15dp"
+            android:textColor="#d2d2d2"
+            android:text="Nome Completo" />
         <EditText
             android:id="@+id/edt_nome"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:fontFamily=""
-            android:hint="Nome Completo"
+            android:textSize="16dp"
+            android:hint="Insira seu nome completo"
+            android:layout_marginTop="3dp"
+            android:background="@drawable/edt_box"
             android:inputType="text"
-            android:textColor="#F2F2F2"
+            android:textColor="#0F0F0F"
             android:textColorHint="#424242"  />
 
+        <TextView
+            android:id="@+id/textView115"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nunito_extrabold"
+            android:layout_marginTop="7dp"
+            android:textColor="#d2d2d2"
+            android:text="E-mail" />
         <EditText
             android:id="@+id/edt_emailCadastro"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:fontFamily=""
-            android:hint="E-mail"
+            android:hint="Insira seu e-mail"
             android:inputType="textEmailAddress"
-            android:textColor="#F2F2F2"
-            android:textColorHint="#424242" />
+            android:textSize="16dp"
+            android:layout_marginTop="3dp"
+            android:background="@drawable/edt_box"
+            android:textColor="#0F0F0F"
+            android:textColorHint="#424242"/>
 
+        <TextView
+            android:id="@+id/textView1152"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nunito_extrabold"
+            android:layout_marginTop="7dp"
+            android:textColor="#d2d2d2"
+            android:text="Senha" />
         <EditText
             android:id="@+id/edt_senhaCadastro"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="Senha"
+            android:hint="Insira sua senha"
             android:inputType="textPassword"
-            android:textColor="#F2F2F2"
-            android:textColorHint="#424242" />
+            android:layout_marginTop="3dp"
+            android:background="@drawable/edt_box"
+            android:textSize="16dp"
+            android:textColor="#0F0F0F"
+            android:textColorHint="#424242"/>
 
         <Button
             android:id="@+id/btn_cadastro"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/laranja"
             android:fontFamily="@font/nunito_extrabold"
             android:text="CADASTRAR"
-            android:textColor="#F2F2F2"/>
+            android:layout_marginTop="20dp"
+            android:textColor="#F2F2F2"
+            app:cornerRadius="10dp"/>
     </LinearLayout>
 </FrameLayout>

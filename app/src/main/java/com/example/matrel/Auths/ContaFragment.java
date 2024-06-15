@@ -13,7 +13,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.matrel.Favoritos.FavoritosFragment;
-import com.example.matrel.MeusDadosFragment;
+import com.example.matrel.Opcoes.CartoesFragment;
+import com.example.matrel.Opcoes.MeusDadosFragment;
+import com.example.matrel.Opcoes.MeusPedidosFragment;
 import com.example.matrel.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -21,10 +23,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
-import org.json.JSONObject;
-
-import java.util.List;
 
 public class ContaFragment extends Fragment {
 
@@ -42,6 +40,8 @@ public class ContaFragment extends Fragment {
         tvMeusDados = view.findViewById(R.id.tvMeusDados);
         tvNome = view.findViewById(R.id.nomeCompleto);
         tvEmail = view.findViewById(R.id.emailDisplay);
+        tvCartoes = view.findViewById(R.id.tvCartoes);
+        tvMeusPedidos = view.findViewById(R.id.tvMeusPedidos);
         tvFavoritos = view.findViewById(R.id.tvFavoritos);
         tvSair = view.findViewById(R.id.tvSair);
         db = FirebaseDatabase.getInstance().getReference();
@@ -78,6 +78,19 @@ public class ContaFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 loadFragment(new FavoritosFragment());
+            }
+        });
+        tvCartoes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadFragment(new CartoesFragment());
+            }
+        });
+
+        tvMeusPedidos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadFragment(new MeusPedidosFragment());
             }
         });
 

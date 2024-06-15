@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".Pagamento.PagamentoCartaoFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="#0a0a0a"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/textView16"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nome do titular"
+            android:fontFamily="@font/nunito_extrabold"
+            android:textColor="#d2d2d2"
+            />
+
+        <EditText
+            android:id="@+id/edtNomeTitular"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="text"
+            />
+
+        <TextView
+            android:id="@+id/textView17"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nunito_extrabold"
+            android:textColor="#d2d2d2"
+            android:text="Número do Cartão" />
+
+        <EditText
+            android:id="@+id/edtNumCartao"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="number" />
+
+        <TextView
+            android:id="@+id/textView18"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nunito_extrabold"
+            android:textColor="#d2d2d2"
+            android:text="Código de Segurança" />
+
+        <EditText
+            android:id="@+id/edtCodSeg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="number" />
+
+        <TextView
+            android:id="@+id/textView19"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:fontFamily="@font/nunito_extrabold"
+            android:textColor="#d2d2d2"
+            android:text="Data de Validade" />
+
+        <EditText
+            android:id="@+id/edtDataValid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="date" />
+
+        <Button
+            android:id="@+id/btnPagar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/laranja"
+            android:fontFamily="@font/nunito_extrabold"
+            android:textColor="#f2f2f2"
+            android:textSize="20sp"
+            app:cornerRadius="10dp"
+            android:text="Pagar"
+            />
+    </LinearLayout>
+</FrameLayout>

@@ -1,4 +1,4 @@
-package com.example.matrel;
+package com.example.matrel.Opcoes;
 
 import android.os.Bundle;
 
@@ -8,9 +8,11 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.matrel.Auths.UserModel;
+import com.example.matrel.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -22,6 +24,7 @@ public class MeusDadosFragment extends Fragment {
     DatabaseReference db;
     FirebaseAuth auth;
     EditText nome, email, senha;
+    Button editar, salvar;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -46,6 +49,8 @@ public class MeusDadosFragment extends Fragment {
                 }
             }
         });
+
+
 
         return view;
     }
