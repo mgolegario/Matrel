@@ -17,8 +17,12 @@ import com.example.matrel.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.AggregateQuery;
+import com.google.firebase.firestore.AggregateQuerySnapshot;
+import com.google.firebase.firestore.AggregateSource;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -32,6 +36,7 @@ public class ProdutoFragment extends Fragment implements ProdutoInterface{
     FirebaseAuth auth;
     List<ProdutoModel> produtoModelList;
     ProdutoAdapter produtoAdapter;
+    long quantDocs;
     String nome;
     Bundle b;
     @Override
@@ -84,13 +89,28 @@ public class ProdutoFragment extends Fragment implements ProdutoInterface{
             carrinhoMap.put("img_url", produtoModelList.get(position).getImg_url());
             carrinhoMap.put("quantidade", 1);
             if (auth.getCurrentUser() != null) {
-                db.collection("AddToCart").document(auth.getCurrentUser().getUid())
-                        .collection("CurrentUser").add(carrinhoMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DocumentReference> task) {
-                                Toast.makeText(getContext(), "Adicionado ao carrinho", Toast.LENGTH_SHORT).show();
+                Query query = db.collection("AddToCart").document(auth.getCurrentUser().getUid()).collection("CurrentUser").whereEqualTo("nome", produtoModelList.get(position).getNome());
+                AggregateQuery countQuery = query.count();
+                countQuery.get(AggregateSource.SERVER).addOnCompleteListener(new OnCompleteListener<AggregateQuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AggregateQuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            AggregateQuerySnapshot snapshot = task.getResult();
+                            quantDocs = snapshot.getCount();
+                            if (quantDocs == 0) {
+                                db.collection("AddToCart").document(auth.getCurrentUser().getUid())
+                                        .collection("CurrentUser").add(carrinhoMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DocumentReference> task) {
+                                                Toast.makeText(getContext(), "Adicionado ao carrinho", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                            }else{
+                                Toast.makeText(getContext(), "O produto já foi adicionado ao carrinho", Toast.LENGTH_SHORT).show();
                             }
-                        });
+                        }
+                    }
+                });
             }
         }else if (qualApertou == 1){
 
@@ -103,13 +123,28 @@ public class ProdutoFragment extends Fragment implements ProdutoInterface{
             favMap.put("destaque", produtoModelList.get(position).getDestaque());
             favMap.put("procurado", produtoModelList.get(position).getProcurado());
             if (auth.getCurrentUser() != null) {
-                db.collection("Favoritos").document(auth.getCurrentUser().getUid())
-                        .collection("CurrentUser").add(favMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DocumentReference> task) {
-                                Toast.makeText(getContext(), "Adicionado aos favoritos", Toast.LENGTH_SHORT).show();
+                Query query = db.collection("Favoritos").document(auth.getCurrentUser().getUid()).collection("CurrentUser").whereEqualTo("nome", produtoModelList.get(position).getNome());
+                AggregateQuery countQuery = query.count();
+                countQuery.get(AggregateSource.SERVER).addOnCompleteListener(new OnCompleteListener<AggregateQuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AggregateQuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            AggregateQuerySnapshot snapshot = task.getResult();
+                            quantDocs = snapshot.getCount();
+                            if (quantDocs == 0) {
+                                db.collection("Favoritos").document(auth.getCurrentUser().getUid())
+                                        .collection("CurrentUser").add(favMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DocumentReference> task) {
+                                                Toast.makeText(getContext(), "Adicionado aos favoritos", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                            }else{
+                                Toast.makeText(getContext(), "O produto já foi adicionado aos favoritos", Toast.LENGTH_SHORT).show();
                             }
-                        });
+                        }
+                    }
+                });
             }
         }
     }

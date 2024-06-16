@@ -1,5 +1,7 @@
 package com.example.matrel.Carrinho;
 
+import static android.view.View.VISIBLE;
+
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -24,12 +26,19 @@ import com.example.matrel.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.AggregateQuery;
+import com.google.firebase.firestore.AggregateQuerySnapshot;
+import com.google.firebase.firestore.AggregateSource;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +51,8 @@ public class CarrinhoFragment extends Fragment implements CarrinhoInterface{
     List<CarrinhoModel> carrinhoModelList;
     CarrinhoAdapter carrinhoAdapter;
     Button btnCompra;
-    TextView total;
+    long quantDocs;
+    TextView total, carrinhoVazio;
 
 
     @Override
@@ -58,6 +68,7 @@ public class CarrinhoFragment extends Fragment implements CarrinhoInterface{
         carrinhoModelList = new ArrayList<>();
         carrinhoAdapter = new CarrinhoAdapter(getActivity(), carrinhoModelList, this);
         carrinhoRec.setAdapter(carrinhoAdapter);
+        carrinhoVazio = view.findViewById(R.id.carrinhoVazio);
         total = view.findViewById(R.id.tv_Total);
 
         if (auth.getCurrentUser() != null) {
@@ -91,15 +102,44 @@ public class CarrinhoFragment extends Fragment implements CarrinhoInterface{
         }else{
             total.setText("R$ 0");
         }
-btnCompra = view.findViewById(R.id.btn_compra_carrinho);
-        if (auth.getCurrentUser() != null) {
-            btnCompra.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    loadFragment(new PaymentMethodFragment());
+        Query query = db.collection("AddToCart").document(auth.getCurrentUser().getUid()).collection("CurrentUser");
+        AggregateQuery countQuery = query.count();
+        countQuery.get(AggregateSource.SERVER).addOnCompleteListener(new OnCompleteListener<AggregateQuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<AggregateQuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    AggregateQuerySnapshot snapshot = task.getResult();
+                    quantDocs = snapshot.getCount();
+                    if (quantDocs == 0) {
+                        carrinhoVazio.setVisibility(VISIBLE);
+                    }
                 }
-            });
-        }
+            }
+        });
+        btnCompra = view.findViewById(R.id.btn_compra_carrinho);
+
+        btnCompra.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Query query = db.collection("AddToCart").document(auth.getCurrentUser().getUid()).collection("CurrentUser");
+                AggregateQuery countQuery = query.count();
+                countQuery.get(AggregateSource.SERVER).addOnCompleteListener(new OnCompleteListener<AggregateQuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AggregateQuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            AggregateQuerySnapshot snapshot = task.getResult();
+                            quantDocs = snapshot.getCount();
+                            if (auth.getCurrentUser() != null && quantDocs != 0) {
+                                loadFragment(new PaymentMethodFragment());
+                            } else {
+                                Toast.makeText(getContext(), "O carrinho está vazio", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+                });
+            }
+        });
+
 
         return view;
     }

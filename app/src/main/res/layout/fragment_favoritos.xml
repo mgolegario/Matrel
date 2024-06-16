@@ -14,10 +14,21 @@
         android:orientation="vertical"
         android:paddingTop="20dp"
         android:background="#0A0A0A">
+        <TextView
+            android:id="@+id/favVazio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#d2d2d2"
+            android:padding="10dp"
+            android:fontFamily="@font/nunito_extrabold"
+            android:visibility="invisible"
+            android:textAlignment="center"
+            android:text="Parece que você não favoritou nada! Navegue pela nossa loja para achar o jogo perfeito para você ;)" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recFav"
             android:layout_width="match_parent"
+            android:layout_marginTop="-61dp"
             android:layout_height="match_parent" />
     </LinearLayout>
 

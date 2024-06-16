@@ -1,5 +1,7 @@
 package com.example.matrel.Favoritos;
 
+import static android.view.View.VISIBLE;
+
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -13,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.matrel.Destaques.DestaquesModel;
@@ -22,11 +25,15 @@ import com.example.matrel.VerTodos.VerTodosAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.AggregateQuery;
+import com.google.firebase.firestore.AggregateQuerySnapshot;
+import com.google.firebase.firestore.AggregateSource;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -40,6 +47,8 @@ FirebaseFirestore db;
 FavoritosAdapter favoritosAdapter;
 List<DestaquesModel> destaquesModelList;
 RecyclerView favRec;
+long quantDocs;
+TextView favVazio;
 FirebaseAuth auth;
 
     @Override
@@ -53,6 +62,7 @@ FirebaseAuth auth;
         auth = FirebaseAuth.getInstance();
         favRec.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
         destaquesModelList = new ArrayList<>();
+        favVazio = view.findViewById(R.id.favVazio);
         favoritosAdapter = new FavoritosAdapter(getActivity(), destaquesModelList, this);
         favRec.setAdapter(favoritosAdapter);
 
@@ -75,6 +85,21 @@ FirebaseAuth auth;
                         }
                     });
         }
+
+        Query query = db.collection("Favoritos").document(auth.getCurrentUser().getUid()).collection("CurrentUser");
+        AggregateQuery countQuery = query.count();
+        countQuery.get(AggregateSource.SERVER).addOnCompleteListener(new OnCompleteListener<AggregateQuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<AggregateQuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    AggregateQuerySnapshot snapshot = task.getResult();
+                    quantDocs = snapshot.getCount();
+                    if (quantDocs == 0) {
+                        favVazio.setVisibility(VISIBLE);
+                    }
+                }
+            }
+        });
 
         return view;
     }
@@ -121,13 +146,28 @@ FirebaseAuth auth;
                 carrinhoMap.put("img_url", destaquesModelList.get(position).getImg_url());
                 carrinhoMap.put("quantidade", 1);
                 if (auth.getCurrentUser() != null) {
-                    db.collection("AddToCart").document(auth.getCurrentUser().getUid())
-                            .collection("CurrentUser").add(carrinhoMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
-                                @Override
-                                public void onComplete(@NonNull Task<DocumentReference> task) {
-                                    Toast.makeText(getContext(), "Adicionado ao carrinho", Toast.LENGTH_SHORT).show();
+                    Query query = db.collection("AddToCart").document(auth.getCurrentUser().getUid()).collection("CurrentUser").whereEqualTo("nome", destaquesModelList.get(position).getNome());
+                    AggregateQuery countQuery = query.count();
+                    countQuery.get(AggregateSource.SERVER).addOnCompleteListener(new OnCompleteListener<AggregateQuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AggregateQuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                AggregateQuerySnapshot snapshot = task.getResult();
+                                quantDocs = snapshot.getCount();
+                                if (quantDocs == 0) {
+                                    db.collection("AddToCart").document(auth.getCurrentUser().getUid())
+                                            .collection("CurrentUser").add(carrinhoMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<DocumentReference> task) {
+                                                    Toast.makeText(getContext(), "Adicionado ao carrinho", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+                                }else{
+                                    Toast.makeText(getContext(), "O produto já foi adicionado ao carrinho", Toast.LENGTH_SHORT).show();
                                 }
-                            });
+                            }
+                        }
+                    });
                 }
                 break;
 

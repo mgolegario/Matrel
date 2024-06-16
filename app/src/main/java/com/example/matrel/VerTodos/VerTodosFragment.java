@@ -21,8 +21,12 @@ import com.example.matrel.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.AggregateQuery;
+import com.google.firebase.firestore.AggregateQuerySnapshot;
+import com.google.firebase.firestore.AggregateSource;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -37,6 +41,7 @@ public class VerTodosFragment extends Fragment implements VerTodosInterface {
     FirebaseAuth auth;
     List<DestaquesModel> destaquesModelList;
     VerTodosAdapter verTodosAdapter;
+    long quantDocs;
     TextView categText;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -147,13 +152,29 @@ public class VerTodosFragment extends Fragment implements VerTodosInterface {
                 favMap.put("destaque", destaquesModelList.get(position).getDestaque());
                 favMap.put("procurado", destaquesModelList.get(position).getProcurado());
                 if (auth.getCurrentUser() != null) {
-                    db.collection("Favoritos").document(auth.getCurrentUser().getUid())
-                            .collection("CurrentUser").add(favMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
-                                @Override
-                                public void onComplete(@NonNull Task<DocumentReference> task) {
-                                    Toast.makeText(getContext(), "Adicionado aos favoritos", Toast.LENGTH_SHORT).show();
+
+                    Query query = db.collection("Favoritos").document(auth.getCurrentUser().getUid()).collection("CurrentUser").whereEqualTo("nome", destaquesModelList.get(position).getNome());
+                    AggregateQuery countQuery = query.count();
+                    countQuery.get(AggregateSource.SERVER).addOnCompleteListener(new OnCompleteListener<AggregateQuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AggregateQuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                AggregateQuerySnapshot snapshot = task.getResult();
+                                quantDocs = snapshot.getCount();
+                                if (quantDocs == 0) {
+                                    db.collection("Favoritos").document(auth.getCurrentUser().getUid())
+                                            .collection("CurrentUser").add(favMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<DocumentReference> task) {
+                                                    Toast.makeText(getContext(), "Adicionado aos favoritos", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+                                }else{
+                                    Toast.makeText(getContext(), "O produto já foi adicionado aos favoritos", Toast.LENGTH_SHORT).show();
                                 }
-                            });
+                            }
+                        }
+                    });
                 }
                 break;
 
@@ -163,14 +184,30 @@ public class VerTodosFragment extends Fragment implements VerTodosInterface {
                 carrinhoMap.put("preco", destaquesModelList.get(position).getPreco());
                 carrinhoMap.put("img_url", destaquesModelList.get(position).getImg_url());
                 carrinhoMap.put("quantidade", 1);
+
                 if (auth.getCurrentUser() != null) {
-                    db.collection("AddToCart").document(auth.getCurrentUser().getUid())
-                            .collection("CurrentUser").add(carrinhoMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
-                                @Override
-                                public void onComplete(@NonNull Task<DocumentReference> task) {
-                                    Toast.makeText(getContext(), "Adicionado ao carrinho", Toast.LENGTH_SHORT).show();
+                    Query query = db.collection("AddToCart").document(auth.getCurrentUser().getUid()).collection("CurrentUser").whereEqualTo("nome", destaquesModelList.get(position).getNome());
+                    AggregateQuery countQuery = query.count();
+                    countQuery.get(AggregateSource.SERVER).addOnCompleteListener(new OnCompleteListener<AggregateQuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AggregateQuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                AggregateQuerySnapshot snapshot = task.getResult();
+                                quantDocs = snapshot.getCount();
+                                if (quantDocs == 0) {
+                                    db.collection("AddToCart").document(auth.getCurrentUser().getUid())
+                                            .collection("CurrentUser").add(carrinhoMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<DocumentReference> task) {
+                                                    Toast.makeText(getContext(), "Adicionado ao carrinho", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+                                }else{
+                                    Toast.makeText(getContext(), "O produto já foi adicionado ao carrinho", Toast.LENGTH_SHORT).show();
                                 }
-                            });
+                            }
+                        }
+                    });
                 }
                 break;
 
