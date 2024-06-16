@@ -60,9 +60,9 @@ public class CarrinhoFragment extends Fragment implements CarrinhoInterface{
         carrinhoRec.setAdapter(carrinhoAdapter);
         total = view.findViewById(R.id.tv_Total);
 
-
-        db.collection("AddToCart").document(auth.getCurrentUser().getUid())
-                .collection("CurrentUser")
+        if (auth.getCurrentUser() != null) {
+            db.collection("AddToCart").document(auth.getCurrentUser().getUid())
+                    .collection("CurrentUser")
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
@@ -78,24 +78,28 @@ public class CarrinhoFragment extends Fragment implements CarrinhoInterface{
                             }
                         }
                     });
-
-db.collection("AddToCart").document(auth.getCurrentUser().getUid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
-    @Override
-    public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-        String valor = value.get("valorTotal").toString();
-        Float valorConv = Math.round(Float.parseFloat(valor) * 100) / 100.0F;
-        total.setText("R$ "+valorConv);
-    }
-});
-
+        }
+        if (auth.getCurrentUser() != null) {
+            db.collection("AddToCart").document(auth.getCurrentUser().getUid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                @Override
+                public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                    String valor = value.get("valorTotal").toString();
+                    Float valorConv = Math.round(Float.parseFloat(valor) * 100) / 100.0F;
+                    total.setText("R$ " + valorConv);
+                }
+            });
+        }else{
+            total.setText("R$ 0");
+        }
 btnCompra = view.findViewById(R.id.btn_compra_carrinho);
-btnCompra.setOnClickListener(new View.OnClickListener() {
-    @Override
-    public void onClick(View v) {
-        loadFragment(new PaymentMethodFragment());
-    }
-});
-
+        if (auth.getCurrentUser() != null) {
+            btnCompra.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    loadFragment(new PaymentMethodFragment());
+                }
+            });
+        }
 
         return view;
     }
@@ -123,21 +127,23 @@ btnCompra.setOnClickListener(new View.OnClickListener() {
                 loadFragmentBundle(new ProdutoFragment(), b);
                 break;
             case 1:
-                db.collection("AddToCart").document(auth.getUid()).collection("CurrentUser").whereEqualTo("nome",carrinhoModelList.get(position).getNome().toString()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        task.getResult().getDocuments().forEach(new Consumer<DocumentSnapshot>() {
-                            @Override
-                            public void accept(DocumentSnapshot documentSnapshot) {
-                                documentSnapshot.getReference().delete();
-                                Toast.makeText(getContext(), "Produto removido com sucesso", Toast.LENGTH_SHORT).show();
-                                db.collection("AddToCart").document(auth.getCurrentUser().getUid())
-                                        .update("valorTotal", carrinhoModelList.get(position).getQuantidade() * carrinhoModelList.get(position).getPreco() - carrinhoModelList.get(position).getPreco() );
-                                loadFragment(new CarrinhoFragment());
-                            }
-                        });
-                    }
-                });
+                if (auth.getCurrentUser() != null) {
+                    db.collection("AddToCart").document(auth.getUid()).collection("CurrentUser").whereEqualTo("nome", carrinhoModelList.get(position).getNome().toString()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            task.getResult().getDocuments().forEach(new Consumer<DocumentSnapshot>() {
+                                @Override
+                                public void accept(DocumentSnapshot documentSnapshot) {
+                                    documentSnapshot.getReference().delete();
+                                    Toast.makeText(getContext(), "Produto removido com sucesso", Toast.LENGTH_SHORT).show();
+                                    db.collection("AddToCart").document(auth.getCurrentUser().getUid())
+                                            .update("valorTotal", carrinhoModelList.get(position).getQuantidade() * carrinhoModelList.get(position).getPreco() - carrinhoModelList.get(position).getPreco());
+                                    loadFragment(new CarrinhoFragment());
+                                }
+                            });
+                        }
+                    });
+                }
                 break;
         }
     }

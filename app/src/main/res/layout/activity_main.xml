@@ -5,7 +5,8 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:background="#0a0a0a">
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -21,15 +22,19 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center"
             android:layout_marginStart="15dp"
             android:layout_marginEnd="15dp"
+            android:gravity="center"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:orientation="horizontal">
 
             <EditText
                 android:id="@+id/search_box"
                 android:layout_width="291dp"
                 android:layout_height="25dp"
+                android:layout_marginEnd="15dp"
+                android:focusableInTouchMode="true"
                 android:layout_weight="1"
                 android:background="@drawable/search_box_model"
                 android:drawableStart="@drawable/baseline_manage_search_24"
@@ -41,8 +46,8 @@
                 android:inputType="text"
                 android:paddingStart="10dp"
                 android:textAlignment="inherit"
+                android:textColor="#2D2D2D"
                 android:textColorHint="#4D4D4D"
-                android:layout_marginEnd="15dp"
                 android:textSize="12sp" />
 
             <ImageView
@@ -64,6 +69,7 @@
             android:textColor="#F2F2F2"
             android:textSize="16sp"
             android:visibility="invisible" />
+
     </LinearLayout>
 
     <FrameLayout
@@ -71,13 +77,28 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="#0A0A0A"
+
         app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
         app:layout_constraintEnd_toEndOf="parent"
-
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout">
 
     </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/linearSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:orientation="vertical"
+        android:background="#0a0a0a"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/search_rec"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 
     <View
         android:layout_width="match_parent"

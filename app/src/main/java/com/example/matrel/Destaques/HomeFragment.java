@@ -20,11 +20,13 @@ import com.example.matrel.Produto.ProdutoFragment;
 import com.example.matrel.R;
 import com.example.matrel.VerTodos.VerTodosFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -125,13 +127,21 @@ public class HomeFragment extends Fragment implements DestaquesInterface {
                 favMap.put("type", destaquesModelList.get(position).getType());
                 favMap.put("destaque", destaquesModelList.get(position).getDestaque());
                 favMap.put("procurado", destaquesModelList.get(position).getProcurado());
-                db.collection("Favoritos").document(auth.getCurrentUser().getUid())
-                        .collection("CurrentUser").add(favMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DocumentReference> task) {
-                                Toast.makeText(getContext(), "Adicionado aos favoritos", Toast.LENGTH_SHORT).show();
-                            }
-                        });
+                if (auth.getCurrentUser() != null ) {
+                    db.collection("Favoritos").document(auth.getCurrentUser().getUid()).collection("CurrentUser").whereEqualTo("nome", destaquesModelList.get(position).getNome().toString()).get().addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            db.collection("Favoritos").document(auth.getCurrentUser().getUid())
+                                    .collection("CurrentUser").add(favMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<DocumentReference> task) {
+                                            Toast.makeText(getContext(), "Adicionado aos favoritos", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                        }
+                    });
+
+                }
                 break;
 
             case 2:
@@ -140,13 +150,15 @@ public class HomeFragment extends Fragment implements DestaquesInterface {
                 carrinhoMap.put("preco", destaquesModelList.get(position).getPreco());
                 carrinhoMap.put("img_url", destaquesModelList.get(position).getImg_url());
                 carrinhoMap.put("quantidade", 1);
-                db.collection("AddToCart").document(auth.getCurrentUser().getUid())
-                        .collection("CurrentUser").add(carrinhoMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DocumentReference> task) {
-                                Toast.makeText(getContext(), "Adicionado ao carrinho", Toast.LENGTH_SHORT).show();
-                            }
-                        });
+                if (auth.getCurrentUser() != null) {
+                    db.collection("AddToCart").document(auth.getCurrentUser().getUid())
+                            .collection("CurrentUser").add(carrinhoMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentReference> task) {
+                                    Toast.makeText(getContext(), "Adicionado ao carrinho", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                }
                 break;
 
         }

@@ -146,13 +146,15 @@ public class VerTodosFragment extends Fragment implements VerTodosInterface {
                 favMap.put("type", destaquesModelList.get(position).getType());
                 favMap.put("destaque", destaquesModelList.get(position).getDestaque());
                 favMap.put("procurado", destaquesModelList.get(position).getProcurado());
-                db.collection("Favoritos").document(auth.getCurrentUser().getUid())
-                        .collection("CurrentUser").add(favMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DocumentReference> task) {
-                                Toast.makeText(getContext(), "Adicionado aos favoritos", Toast.LENGTH_SHORT).show();
-                            }
-                        });
+                if (auth.getCurrentUser() != null) {
+                    db.collection("Favoritos").document(auth.getCurrentUser().getUid())
+                            .collection("CurrentUser").add(favMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentReference> task) {
+                                    Toast.makeText(getContext(), "Adicionado aos favoritos", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                }
                 break;
 
             case 2:
@@ -161,13 +163,15 @@ public class VerTodosFragment extends Fragment implements VerTodosInterface {
                 carrinhoMap.put("preco", destaquesModelList.get(position).getPreco());
                 carrinhoMap.put("img_url", destaquesModelList.get(position).getImg_url());
                 carrinhoMap.put("quantidade", 1);
-                db.collection("AddToCart").document(auth.getCurrentUser().getUid())
-                        .collection("CurrentUser").add(carrinhoMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DocumentReference> task) {
-                                Toast.makeText(getContext(), "Adicionado ao carrinho", Toast.LENGTH_SHORT).show();
-                            }
-                        });
+                if (auth.getCurrentUser() != null) {
+                    db.collection("AddToCart").document(auth.getCurrentUser().getUid())
+                            .collection("CurrentUser").add(carrinhoMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentReference> task) {
+                                    Toast.makeText(getContext(), "Adicionado ao carrinho", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                }
                 break;
 
         }

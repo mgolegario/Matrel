@@ -56,24 +56,25 @@ FirebaseAuth auth;
         favoritosAdapter = new FavoritosAdapter(getActivity(), destaquesModelList, this);
         favRec.setAdapter(favoritosAdapter);
 
-
-        db.collection("Favoritos").document(auth.getCurrentUser().getUid())
-                .collection("CurrentUser")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                DestaquesModel destaquesModel = document.toObject(DestaquesModel.class);
-                                destaquesModelList.add(destaquesModel);
-                                favoritosAdapter.notifyDataSetChanged();
+        if (auth.getCurrentUser() != null) {
+            db.collection("Favoritos").document(auth.getCurrentUser().getUid())
+                    .collection("CurrentUser")
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    DestaquesModel destaquesModel = document.toObject(DestaquesModel.class);
+                                    destaquesModelList.add(destaquesModel);
+                                    favoritosAdapter.notifyDataSetChanged();
+                                }
+                            } else {
+                                Toast.makeText(getActivity(), "Error" + task.getException(), Toast.LENGTH_SHORT).show();
                             }
-                        } else {
-                            Toast.makeText(getActivity(), "Error" + task.getException(), Toast.LENGTH_SHORT).show();
                         }
-                    }
-                });
+                    });
+        }
 
         return view;
     }
@@ -97,19 +98,21 @@ FirebaseAuth auth;
 
         switch (index){
             case 0:
-                db.collection("Favoritos").document(auth.getUid()).collection("CurrentUser").whereEqualTo("nome",destaquesModelList.get(position).getNome().toString()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        task.getResult().getDocuments().forEach(new Consumer<DocumentSnapshot>() {
-                            @Override
-                            public void accept(DocumentSnapshot documentSnapshot) {
-                                documentSnapshot.getReference().delete();
-                                Toast.makeText(getContext(), "Produto removido com sucesso", Toast.LENGTH_SHORT).show();
-                                loadFragment(new FavoritosFragment());
-                            }
-                        });
-                    }
-                });
+                if (auth.getCurrentUser() != null) {
+                    db.collection("Favoritos").document(auth.getUid()).collection("CurrentUser").whereEqualTo("nome", destaquesModelList.get(position).getNome().toString()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            task.getResult().getDocuments().forEach(new Consumer<DocumentSnapshot>() {
+                                @Override
+                                public void accept(DocumentSnapshot documentSnapshot) {
+                                    documentSnapshot.getReference().delete();
+                                    Toast.makeText(getContext(), "Produto removido com sucesso", Toast.LENGTH_SHORT).show();
+                                    loadFragment(new FavoritosFragment());
+                                }
+                            });
+                        }
+                    });
+                }
                 break;
             case 1:
                 final HashMap<String, Object> carrinhoMap = new HashMap<>();
@@ -117,13 +120,15 @@ FirebaseAuth auth;
                 carrinhoMap.put("preco", destaquesModelList.get(position).getPreco());
                 carrinhoMap.put("img_url", destaquesModelList.get(position).getImg_url());
                 carrinhoMap.put("quantidade", 1);
-                db.collection("AddToCart").document(auth.getCurrentUser().getUid())
-                        .collection("CurrentUser").add(carrinhoMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DocumentReference> task) {
-                                Toast.makeText(getContext(), "Adicionado ao carrinho", Toast.LENGTH_SHORT).show();
-                            }
-                        });
+                if (auth.getCurrentUser() != null) {
+                    db.collection("AddToCart").document(auth.getCurrentUser().getUid())
+                            .collection("CurrentUser").add(carrinhoMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentReference> task) {
+                                    Toast.makeText(getContext(), "Adicionado ao carrinho", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                }
                 break;
 
             case 2:

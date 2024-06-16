@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +32,7 @@ EditText edtEmail, edtSenha;
 Button entrar;
 FirebaseAuth auth;
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -43,6 +45,7 @@ FirebaseAuth auth;
         edtSenha = view.findViewById(R.id.edt_senhaLogin);
         tvCadastro = view.findViewById(R.id.tvCadastro);
         frameLayout = view.findViewById(R.id.frameLayoutConta);
+
 
 
         tvCadastro.setOnClickListener(new View.OnClickListener() {

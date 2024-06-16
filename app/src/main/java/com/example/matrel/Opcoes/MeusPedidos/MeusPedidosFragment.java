@@ -53,7 +53,7 @@ public class MeusPedidosFragment extends Fragment implements MeusPedidosInterfac
             meusPedidosAdapter = new MeusPedidosAdapter(getActivity(), meusPedidosModelList, this);
             pedidosRec.setAdapter(meusPedidosAdapter);
 
-
+        if (auth.getCurrentUser() != null) {
             db.collection("Comprado").document(auth.getCurrentUser().getUid())
                     .collection("CurrentUser")
                     .get()
@@ -71,7 +71,7 @@ public class MeusPedidosFragment extends Fragment implements MeusPedidosInterfac
                             }
                         }
                     });
-
+        }
 
 
         return view;

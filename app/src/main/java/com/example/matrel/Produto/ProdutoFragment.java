@@ -83,14 +83,17 @@ public class ProdutoFragment extends Fragment implements ProdutoInterface{
             carrinhoMap.put("preco", produtoModelList.get(position).getPreco());
             carrinhoMap.put("img_url", produtoModelList.get(position).getImg_url());
             carrinhoMap.put("quantidade", 1);
-            db.collection("AddToCart").document(auth.getCurrentUser().getUid())
-                    .collection("CurrentUser").add(carrinhoMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentReference> task) {
-                            Toast.makeText(getContext(), "Adicionado ao carrinho", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+            if (auth.getCurrentUser() != null) {
+                db.collection("AddToCart").document(auth.getCurrentUser().getUid())
+                        .collection("CurrentUser").add(carrinhoMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentReference> task) {
+                                Toast.makeText(getContext(), "Adicionado ao carrinho", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+            }
         }else if (qualApertou == 1){
+
             final HashMap<String, Object> favMap = new HashMap<>();
             favMap.put("nome", produtoModelList.get(position).getNome());
             favMap.put("preco", produtoModelList.get(position).getPreco());
@@ -99,14 +102,15 @@ public class ProdutoFragment extends Fragment implements ProdutoInterface{
             favMap.put("type", produtoModelList.get(position).getType());
             favMap.put("destaque", produtoModelList.get(position).getDestaque());
             favMap.put("procurado", produtoModelList.get(position).getProcurado());
-
-            db.collection("Favoritos").document(auth.getCurrentUser().getUid())
-                    .collection("CurrentUser").add(favMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentReference> task) {
-                            Toast.makeText(getContext(), "Adicionado aos favoritos", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+            if (auth.getCurrentUser() != null) {
+                db.collection("Favoritos").document(auth.getCurrentUser().getUid())
+                        .collection("CurrentUser").add(favMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentReference> task) {
+                                Toast.makeText(getContext(), "Adicionado aos favoritos", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+            }
         }
     }
 }
