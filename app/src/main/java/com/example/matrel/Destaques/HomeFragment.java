@@ -15,17 +15,23 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.example.matrel.Favoritos.FavoritosFragment;
 import com.example.matrel.Produto.ProdutoFragment;
 import com.example.matrel.R;
 import com.example.matrel.VerTodos.VerTodosFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class HomeFragment extends Fragment implements DestaquesInterface {
 
@@ -33,6 +39,7 @@ public class HomeFragment extends Fragment implements DestaquesInterface {
     FirebaseFirestore db;
     List<DestaquesModel> destaquesModelList;
     DestaquesAdapter destaquesAdapter;
+    FirebaseAuth auth;
     LinearLayout verTodosdstq, verTodosmsprd;
 
     @Override
@@ -43,7 +50,7 @@ public class HomeFragment extends Fragment implements DestaquesInterface {
 
         db = FirebaseFirestore.getInstance();
         destaquesRec = v.findViewById(R.id.destaques_rec);
-
+        auth = FirebaseAuth.getInstance();
         destaquesRec.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false));
         destaquesModelList = new ArrayList<>();
         destaquesAdapter = new DestaquesAdapter(getActivity(), destaquesModelList, this);
@@ -102,9 +109,47 @@ public class HomeFragment extends Fragment implements DestaquesInterface {
     }
 
     @Override
-    public void onItemClick(int position) {
-        Bundle b = new Bundle();
-        b.putString("nome",destaquesModelList.get(position).getNome().toString());
-        loadFragment(new ProdutoFragment(), b);
+    public void onItemClick(int position, int index) {
+        switch (index){
+            case 0:
+                Bundle b = new Bundle();
+                b.putString("nome",destaquesModelList.get(position).getNome().toString());
+                loadFragment(new ProdutoFragment(), b);
+                break;
+            case 1:
+                final HashMap<String, Object> favMap = new HashMap<>();
+                favMap.put("nome", destaquesModelList.get(position).getNome());
+                favMap.put("preco", destaquesModelList.get(position).getPreco());
+                favMap.put("img_url", destaquesModelList.get(position).getImg_url());
+                favMap.put("avaliacoes", destaquesModelList.get(position).getAvaliacoes());
+                favMap.put("type", destaquesModelList.get(position).getType());
+                favMap.put("destaque", destaquesModelList.get(position).getDestaque());
+                favMap.put("procurado", destaquesModelList.get(position).getProcurado());
+                db.collection("Favoritos").document(auth.getCurrentUser().getUid())
+                        .collection("CurrentUser").add(favMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentReference> task) {
+                                Toast.makeText(getContext(), "Adicionado aos favoritos", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                break;
+
+            case 2:
+                final HashMap<String, Object> carrinhoMap = new HashMap<>();
+                carrinhoMap.put("nome", destaquesModelList.get(position).getNome());
+                carrinhoMap.put("preco", destaquesModelList.get(position).getPreco());
+                carrinhoMap.put("img_url", destaquesModelList.get(position).getImg_url());
+                carrinhoMap.put("quantidade", 1);
+                db.collection("AddToCart").document(auth.getCurrentUser().getUid())
+                        .collection("CurrentUser").add(carrinhoMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentReference> task) {
+                                Toast.makeText(getContext(), "Adicionado ao carrinho", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                break;
+
+        }
+
     }
 }

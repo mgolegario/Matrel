@@ -50,7 +50,7 @@ public class VerTodosAdapter extends RecyclerView.Adapter<VerTodosAdapter.ViewHo
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-        ImageView destImg;
+        ImageView destImg, fav, cart;
         TextView nome, avaliacoes, preco;
         Button btn;
         public ViewHolder(@NonNull View itemView, VerTodosInterface verTodosInterface) {
@@ -61,6 +61,8 @@ public class VerTodosAdapter extends RecyclerView.Adapter<VerTodosAdapter.ViewHo
             avaliacoes = itemView.findViewById(R.id.avaliacoes_todos);
             preco = itemView.findViewById(R.id.preco_todos);
             btn = itemView.findViewById(R.id.btnComprarCard2);
+            fav = itemView.findViewById(R.id.fav_verTodos);
+            cart = itemView.findViewById(R.id.cart_verTodos);
 
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -70,7 +72,7 @@ public class VerTodosAdapter extends RecyclerView.Adapter<VerTodosAdapter.ViewHo
                             int position = getAdapterPosition();
 
                             if (position != RecyclerView.NO_POSITION){
-                                verTodosInterface.onItemClick(position);
+                                verTodosInterface.onItemClick(position, 0);
                             }
                         }
                 }
@@ -82,7 +84,32 @@ public class VerTodosAdapter extends RecyclerView.Adapter<VerTodosAdapter.ViewHo
                         int position = getAdapterPosition();
 
                         if (position != RecyclerView.NO_POSITION){
-                            verTodosInterface.onItemClick(position);
+                            verTodosInterface.onItemClick(position, 0);
+                        }
+                    }
+                }
+            });
+
+            fav.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(verTodosInterface != null){
+                        int position = getAdapterPosition();
+
+                        if (position != RecyclerView.NO_POSITION){
+                            verTodosInterface.onItemClick(position, 1);
+                        }
+                    }
+                }
+            });
+            cart.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(verTodosInterface != null){
+                        int position = getAdapterPosition();
+
+                        if (position != RecyclerView.NO_POSITION){
+                            verTodosInterface.onItemClick(position, 2);
                         }
                     }
                 }

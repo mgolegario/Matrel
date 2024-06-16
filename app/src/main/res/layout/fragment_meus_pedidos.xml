@@ -3,12 +3,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Opcoes.MeusPedidosFragment"
+    tools:context=".Opcoes.MeusPedidos.MeusPedidosFragment"
     android:background="#0a0a0a">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/pedidosRec"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="10dp"/>
+        android:orientation="vertical"
+      >
+
+        <TextView
+            android:id="@+id/textView8"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nunito_black"
+            android:paddingTop="20dp"
+            android:paddingStart="20dp"
+            android:text="MEUS PEDIDOS"
+            android:textColor="#d2d2d2" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/pedidosRec"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="15dp" />
+    </LinearLayout>
+
 </FrameLayout>

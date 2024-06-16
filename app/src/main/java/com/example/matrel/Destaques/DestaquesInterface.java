@@ -1,5 +1,5 @@
 package com.example.matrel.Destaques;
 
 public interface DestaquesInterface {
-    void onItemClick(int position);
+    void onItemClick(int position, int index);
 }

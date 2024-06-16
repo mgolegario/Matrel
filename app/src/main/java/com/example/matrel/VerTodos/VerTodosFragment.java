@@ -20,17 +20,21 @@ import com.example.matrel.Produto.ProdutoFragment;
 import com.example.matrel.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class VerTodosFragment extends Fragment implements VerTodosInterface {
 
     RecyclerView todosItensRec;
     FirebaseFirestore db;
+    FirebaseAuth auth;
     List<DestaquesModel> destaquesModelList;
     VerTodosAdapter verTodosAdapter;
     TextView categText;
@@ -42,7 +46,7 @@ public class VerTodosFragment extends Fragment implements VerTodosInterface {
 
         db = FirebaseFirestore.getInstance();
         todosItensRec = view.findViewById(R.id.todosItensRec);
-
+        auth = FirebaseAuth.getInstance();
         todosItensRec.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
         destaquesModelList = new ArrayList<>();
         verTodosAdapter = new VerTodosAdapter(getActivity(), destaquesModelList, this);
@@ -126,9 +130,46 @@ public class VerTodosFragment extends Fragment implements VerTodosInterface {
         fragmentTransaction.commit();
     }
 
-    public void onItemClick(int position) {
-        Bundle b = new Bundle();
-        b.putString("nome",destaquesModelList.get(position).getNome().toString());
-        loadFragment(new ProdutoFragment(), b);
+    public void onItemClick(int position, int index) {
+        switch (index){
+            case 0:
+                Bundle b = new Bundle();
+                b.putString("nome",destaquesModelList.get(position).getNome().toString());
+                loadFragment(new ProdutoFragment(), b);
+                break;
+            case 1:
+                final HashMap<String, Object> favMap = new HashMap<>();
+                favMap.put("nome", destaquesModelList.get(position).getNome());
+                favMap.put("preco", destaquesModelList.get(position).getPreco());
+                favMap.put("img_url", destaquesModelList.get(position).getImg_url());
+                favMap.put("avaliacoes", destaquesModelList.get(position).getAvaliacoes());
+                favMap.put("type", destaquesModelList.get(position).getType());
+                favMap.put("destaque", destaquesModelList.get(position).getDestaque());
+                favMap.put("procurado", destaquesModelList.get(position).getProcurado());
+                db.collection("Favoritos").document(auth.getCurrentUser().getUid())
+                        .collection("CurrentUser").add(favMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentReference> task) {
+                                Toast.makeText(getContext(), "Adicionado aos favoritos", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                break;
+
+            case 2:
+                final HashMap<String, Object> carrinhoMap = new HashMap<>();
+                carrinhoMap.put("nome", destaquesModelList.get(position).getNome());
+                carrinhoMap.put("preco", destaquesModelList.get(position).getPreco());
+                carrinhoMap.put("img_url", destaquesModelList.get(position).getImg_url());
+                carrinhoMap.put("quantidade", 1);
+                db.collection("AddToCart").document(auth.getCurrentUser().getUid())
+                        .collection("CurrentUser").add(carrinhoMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentReference> task) {
+                                Toast.makeText(getContext(), "Adicionado ao carrinho", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                break;
+
+        }
     }
 }

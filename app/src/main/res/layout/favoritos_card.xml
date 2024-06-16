@@ -40,15 +40,7 @@
                 android:textSize="12sp" />
 
             <ImageView
-                android:id="@+id/imageView7"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:layout_weight="0.2"
-                app:srcCompat="@drawable/outline_favorite_border_24"
-                app:tint="#525252"  />
-
-            <ImageView
-                android:id="@+id/carrinho_todos"
+                android:id="@+id/carrinho_fav"
                 android:layout_width="15dp"
                 android:layout_height="15dp"
                 android:layout_weight="0.2"

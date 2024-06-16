@@ -76,6 +76,7 @@ public class DepartamentosFragment extends Fragment implements DepartamentosInte
 
     @Override
     public void onItemClick(int position) {
+
             Bundle b = new Bundle();
             b.putString("departamento",departamentosModelList.get(position).getNome().toString());
             loadFragment(new VerTodosFragment(), b);

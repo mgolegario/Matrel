@@ -53,6 +53,7 @@ public class FavoritosAdapter extends RecyclerView.Adapter<FavoritosAdapter.View
         ImageView destImg;
         TextView nome, avaliacoes, preco;
         Button btn;
+        ImageView delete, cart;
         public ViewHolder(@NonNull View itemView, FavoritosInterface favoritosInterface) {
             super(itemView);
 
@@ -61,6 +62,34 @@ public class FavoritosAdapter extends RecyclerView.Adapter<FavoritosAdapter.View
             avaliacoes = itemView.findViewById(R.id.avaliacoes_todos);
             preco = itemView.findViewById(R.id.preco_todos);
             btn = itemView.findViewById(R.id.btnComprarCard2);
+            delete = itemView.findViewById(R.id.del_fav);
+            cart = itemView.findViewById(R.id.carrinho_fav);
+
+            delete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(favoritosInterface != null) {
+                        int position = getAdapterPosition();
+
+                        if (position != RecyclerView.NO_POSITION) {
+                            favoritosInterface.onItemClick(position, 0);
+                        }
+                    }
+                }
+            });
+
+            cart.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(favoritosInterface != null) {
+                        int position = getAdapterPosition();
+
+                        if (position != RecyclerView.NO_POSITION) {
+                            favoritosInterface.onItemClick(position, 1);
+                        }
+                    }
+                }
+            });
 
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -70,7 +99,7 @@ public class FavoritosAdapter extends RecyclerView.Adapter<FavoritosAdapter.View
                         int position = getAdapterPosition();
 
                         if (position != RecyclerView.NO_POSITION){
-                            favoritosInterface.onItemClick(position);
+                            favoritosInterface.onItemClick(position, 2);
                         }
                     }
                 }
@@ -82,7 +111,7 @@ public class FavoritosAdapter extends RecyclerView.Adapter<FavoritosAdapter.View
                         int position = getAdapterPosition();
 
                         if (position != RecyclerView.NO_POSITION){
-                            favoritosInterface.onItemClick(position);
+                            favoritosInterface.onItemClick(position, 2);
                         }
                     }
                 }

@@ -48,7 +48,7 @@ public class DestaquesAdapter  extends RecyclerView.Adapter<DestaquesAdapter.Vie
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-        ImageView destImg;
+        ImageView destImg, fav, cart;
         TextView nome, avaliacoes, preco;
         Button btn;
         public ViewHolder(@NonNull View itemView, DestaquesInterface destaquesInterface) {
@@ -59,6 +59,8 @@ public class DestaquesAdapter  extends RecyclerView.Adapter<DestaquesAdapter.Vie
             avaliacoes = itemView.findViewById(R.id.avaliacoes);
             preco = itemView.findViewById(R.id.preco_rec);
             btn = itemView.findViewById(R.id.btnComprarCard1);
+            fav = itemView.findViewById(R.id.fav_dest);
+            cart = itemView.findViewById(R.id.dest_car);
 
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -67,7 +69,7 @@ public class DestaquesAdapter  extends RecyclerView.Adapter<DestaquesAdapter.Vie
                         int position = getAdapterPosition();
 
                         if (position != RecyclerView.NO_POSITION){
-                            destaquesInterface.onItemClick(position);
+                            destaquesInterface.onItemClick(position, 0);
                         }
                     }
                 }
@@ -79,7 +81,31 @@ public class DestaquesAdapter  extends RecyclerView.Adapter<DestaquesAdapter.Vie
                         int position = getAdapterPosition();
 
                         if (position != RecyclerView.NO_POSITION){
-                            destaquesInterface.onItemClick(position);
+                            destaquesInterface.onItemClick(position, 0);
+                        }
+                    }
+                }
+            });
+            fav.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(destaquesInterface != null){
+                        int position = getAdapterPosition();
+
+                        if (position != RecyclerView.NO_POSITION){
+                            destaquesInterface.onItemClick(position, 1);
+                        }
+                    }
+                }
+            });
+            cart.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(destaquesInterface != null){
+                        int position = getAdapterPosition();
+
+                        if (position != RecyclerView.NO_POSITION){
+                            destaquesInterface.onItemClick(position, 2);
                         }
                     }
                 }

@@ -1,9 +1,11 @@
-package com.example.matrel.Opcoes;
+package com.example.matrel.Opcoes.MeusPedidos;
 
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,6 +18,7 @@ import android.widget.Toast;
 
 import com.example.matrel.Carrinho.CarrinhoAdapter;
 import com.example.matrel.Carrinho.CarrinhoModel;
+import com.example.matrel.Produto.ProdutoFragment;
 import com.example.matrel.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -27,12 +30,13 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MeusPedidosFragment extends Fragment {
+public class MeusPedidosFragment extends Fragment implements MeusPedidosInterface{
     RecyclerView pedidosRec;
     FirebaseFirestore db;
     FirebaseAuth auth;
-    List<CarrinhoModel> carrinhoModelList;
-    CarrinhoAdapter carrinhoAdapter;
+    List<MeusPedidosModel> meusPedidosModelList;
+    MeusPedidosAdapter meusPedidosAdapter;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -45,9 +49,9 @@ public class MeusPedidosFragment extends Fragment {
             pedidosRec = view.findViewById(R.id.pedidosRec);
             auth = FirebaseAuth.getInstance();
             pedidosRec.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
-            carrinhoModelList = new ArrayList<>();
-            carrinhoAdapter = new CarrinhoAdapter(getActivity(), carrinhoModelList);
-            pedidosRec.setAdapter(carrinhoAdapter);
+            meusPedidosModelList = new ArrayList<>();
+            meusPedidosAdapter = new MeusPedidosAdapter(getActivity(), meusPedidosModelList, this);
+            pedidosRec.setAdapter(meusPedidosAdapter);
 
 
             db.collection("Comprado").document(auth.getCurrentUser().getUid())
@@ -58,9 +62,9 @@ public class MeusPedidosFragment extends Fragment {
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             if (task.isSuccessful()) {
                                 for (QueryDocumentSnapshot document : task.getResult()) {
-                                    CarrinhoModel carrinhoModel = document.toObject(CarrinhoModel.class);
-                                    carrinhoModelList.add(carrinhoModel);
-                                    carrinhoAdapter.notifyDataSetChanged();
+                                    MeusPedidosModel meusPedidosModel = document.toObject(MeusPedidosModel.class);
+                                    meusPedidosModelList.add(meusPedidosModel);
+                                    meusPedidosAdapter.notifyDataSetChanged();
                                 }
                             } else {
                                 Toast.makeText(getActivity(), "Error" + task.getException(), Toast.LENGTH_SHORT).show();
@@ -71,5 +75,19 @@ public class MeusPedidosFragment extends Fragment {
 
 
         return view;
+    }
+    private void loadFragment(Fragment fragment, Bundle b){
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragment.setArguments(b);
+        fragmentTransaction.replace(R.id.frameLayout, fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+    @Override
+    public void onItemClick(int position) {
+        Bundle b = new Bundle();
+        b.putString("nome",meusPedidosModelList.get(position).getNome().toString());
+        loadFragment(new ProdutoFragment(), b);
     }
 }

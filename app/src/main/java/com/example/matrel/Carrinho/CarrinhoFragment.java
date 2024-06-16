@@ -17,7 +17,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.matrel.Favoritos.FavoritosFragment;
 import com.example.matrel.Pagamento.PaymentMethodFragment;
+import com.example.matrel.Produto.ProdutoFragment;
 import com.example.matrel.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -31,8 +33,9 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
-public class CarrinhoFragment extends Fragment{
+public class CarrinhoFragment extends Fragment implements CarrinhoInterface{
     RecyclerView carrinhoRec;
     FirebaseFirestore db;
     FirebaseAuth auth;
@@ -53,7 +56,7 @@ public class CarrinhoFragment extends Fragment{
         auth = FirebaseAuth.getInstance();
         carrinhoRec.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
         carrinhoModelList = new ArrayList<>();
-        carrinhoAdapter = new CarrinhoAdapter(getActivity(), carrinhoModelList);
+        carrinhoAdapter = new CarrinhoAdapter(getActivity(), carrinhoModelList, this);
         carrinhoRec.setAdapter(carrinhoAdapter);
         total = view.findViewById(R.id.tv_Total);
 
@@ -102,5 +105,40 @@ btnCompra.setOnClickListener(new View.OnClickListener() {
         fragmentTransaction.replace(R.id.frameLayout, fragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
+    }
+    private void loadFragmentBundle(Fragment fragment, Bundle b){
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragment.setArguments(b);
+        fragmentTransaction.replace(R.id.frameLayout, fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+    @Override
+    public void onItemClick(int position, int index) {
+        switch (index){
+            case 0:
+                Bundle b = new Bundle();
+                b.putString("nome",carrinhoModelList.get(position).getNome().toString());
+                loadFragmentBundle(new ProdutoFragment(), b);
+                break;
+            case 1:
+                db.collection("AddToCart").document(auth.getUid()).collection("CurrentUser").whereEqualTo("nome",carrinhoModelList.get(position).getNome().toString()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        task.getResult().getDocuments().forEach(new Consumer<DocumentSnapshot>() {
+                            @Override
+                            public void accept(DocumentSnapshot documentSnapshot) {
+                                documentSnapshot.getReference().delete();
+                                Toast.makeText(getContext(), "Produto removido com sucesso", Toast.LENGTH_SHORT).show();
+                                db.collection("AddToCart").document(auth.getCurrentUser().getUid())
+                                        .update("valorTotal", carrinhoModelList.get(position).getQuantidade() * carrinhoModelList.get(position).getPreco() - carrinhoModelList.get(position).getPreco() );
+                                loadFragment(new CarrinhoFragment());
+                            }
+                        });
+                    }
+                });
+                break;
+        }
     }
 }

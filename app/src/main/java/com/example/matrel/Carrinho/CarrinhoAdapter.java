@@ -33,6 +33,7 @@ import java.util.List;
 public class CarrinhoAdapter extends RecyclerView.Adapter<CarrinhoAdapter.ViewHolder>{
 
     private FirebaseFirestore db;
+    private CarrinhoInterface carrinhoInterface;
     private String nomeProd;
     private Integer quantidade_num;
     private Float precoNovo, tudo, precoAntigo, total;
@@ -40,15 +41,17 @@ public class CarrinhoAdapter extends RecyclerView.Adapter<CarrinhoAdapter.ViewHo
     private Context context;
     private List<CarrinhoModel> carrinhoModelList;
 
-    public CarrinhoAdapter(Context context, List<CarrinhoModel> carrinhoModelList) {
+    public CarrinhoAdapter(Context context, List<CarrinhoModel> carrinhoModelList, CarrinhoInterface carrinhoInterface) {
         this.context = context;
         this.carrinhoModelList = carrinhoModelList;
+        this.carrinhoInterface = carrinhoInterface;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.carrinho_card, parent, false));
+        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.carrinho_card, parent, false), carrinhoInterface);
+
     }
 
 
@@ -71,7 +74,6 @@ public class CarrinhoAdapter extends RecyclerView.Adapter<CarrinhoAdapter.ViewHo
             tudo = 0f;
         }
         total = carrinhoModelList.get(position).getPreco();
-
         tudo += total;
         db.collection("AddToCart").document(auth.getCurrentUser().getUid())
                 .update("valorTotal", tudo);
@@ -117,13 +119,17 @@ public class CarrinhoAdapter extends RecyclerView.Adapter<CarrinhoAdapter.ViewHo
     @Override
     public int getItemCount() {
         return carrinhoModelList.size();
+
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         ImageView cartImg;
         TextView nome, preco, quantidade, precoTotal;
-        ImageView aumentar, diminuir;
-        public ViewHolder(@NonNull View itemView) {
+        ImageView aumentar, diminuir, del;
+
+
+
+        public ViewHolder(@NonNull View itemView, CarrinhoInterface carrinhoInterface) {
             super(itemView);
 
             cartImg = itemView.findViewById(R.id.img_carrinho);
@@ -132,6 +138,32 @@ public class CarrinhoAdapter extends RecyclerView.Adapter<CarrinhoAdapter.ViewHo
             quantidade = itemView.findViewById(R.id.tv_quant);
             aumentar = itemView.findViewById(R.id.aumentar);
             diminuir = itemView.findViewById(R.id.diminuir);
+            del = itemView.findViewById(R.id.del_carrinho);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(carrinhoInterface != null){
+                        int position = getAdapterPosition();
+
+                        if (position != RecyclerView.NO_POSITION){
+                            carrinhoInterface.onItemClick(position, 0);
+                        }
+                    }
+                }
+            });
+
+del.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View v) {
+        if(carrinhoInterface != null){
+            int position = getAdapterPosition();
+
+            if (position != RecyclerView.NO_POSITION){
+                carrinhoInterface.onItemClick(position, 1);
+            }
+        }
+    }
+});
 
         }
     }

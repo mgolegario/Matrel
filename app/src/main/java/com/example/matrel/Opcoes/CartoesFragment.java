@@ -36,20 +36,6 @@ public class CartoesFragment extends Fragment {
         codSeg = view.findViewById(R.id.edtCodSeg2);
         dataVal = view.findViewById(R.id.edtDataValid2);
 
-        db.child("Users").child(auth.getUid()).child("Cartao").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (task.isSuccessful()) {
-
-                    CartaoModel cartaoModel = task.getResult().getValue(CartaoModel.class);
-                    nome.setText(cartaoModel.nomeTitular);
-                    numCartao.setText(""+cartaoModel.numCartao);
-                    codSeg.setText(""+cartaoModel.segCod);
-                    dataVal.setText(cartaoModel.dataVal);
-
-                }
-            }
-        });
 
         return view;
     }
