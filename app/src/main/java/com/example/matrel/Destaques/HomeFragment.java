@@ -128,9 +128,6 @@ public class HomeFragment extends Fragment implements DestaquesInterface {
                 favMap.put("destaque", destaquesModelList.get(position).getDestaque());
                 favMap.put("procurado", destaquesModelList.get(position).getProcurado());
                 if (auth.getCurrentUser() != null ) {
-                    db.collection("Favoritos").document(auth.getCurrentUser().getUid()).collection("CurrentUser").whereEqualTo("nome", destaquesModelList.get(position).getNome().toString()).get().addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
                             db.collection("Favoritos").document(auth.getCurrentUser().getUid())
                                     .collection("CurrentUser").add(favMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                                         @Override
@@ -138,9 +135,6 @@ public class HomeFragment extends Fragment implements DestaquesInterface {
                                             Toast.makeText(getContext(), "Adicionado aos favoritos", Toast.LENGTH_SHORT).show();
                                         }
                                     });
-                        }
-                    });
-
                 }
                 break;
 
