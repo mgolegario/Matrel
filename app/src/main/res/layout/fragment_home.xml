@@ -18,19 +18,20 @@
             android:orientation="vertical"
             android:gravity="center_horizontal">
 
-            <ImageView
+            <com.makeramen.roundedimageview.RoundedImageView
                 android:id="@+id/imageView"
-                android:layout_width="wrap_content"
+                android:layout_width="345dp"
                 android:layout_height="185dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginLeft="20dp"
+                app:riv_corner_radius="15dp"
                 android:layout_marginRight="20dp"
-                android:src="@drawable/kabum_imagem" />
+                android:src="@drawable/banner" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="55dp"
+                android:layout_marginTop="40dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:paddingStart="20dp"
@@ -151,6 +152,7 @@
                 android:layout_weight="0.5"
                 android:paddingStart="10dp"
                 android:paddingEnd="20dp"
+                android:layout_marginBottom="20dp"
                 android:id="@+id/procurados_rec"/>
         </LinearLayout>
     </ScrollView>

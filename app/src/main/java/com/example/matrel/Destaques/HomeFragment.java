@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.example.matrel.MainActivity;
 import com.example.matrel.Produto.ProdutoFragment;
 import com.example.matrel.R;
 import com.example.matrel.VerTodos.VerTodosFragment;
@@ -178,6 +179,8 @@ public class HomeFragment extends Fragment implements DestaquesInterface, Procur
                     });
 
 
+                }else{
+                    Toast.makeText(getContext(), "Crie uma conta para utilizar os Favoritos", Toast.LENGTH_SHORT).show();
                 }
                 break;
 
@@ -213,6 +216,8 @@ public class HomeFragment extends Fragment implements DestaquesInterface, Procur
                             }
                         }
                     });
+                }else{
+                    Toast.makeText(getContext(), "Crie uma conta para utilizar o Carrinho", Toast.LENGTH_SHORT).show();
                 }
                 break;
 
@@ -263,6 +268,8 @@ public class HomeFragment extends Fragment implements DestaquesInterface, Procur
                     });
 
 
+                }else{
+                    Toast.makeText(getContext(), "Crie uma conta para utilizar os Favoritos", Toast.LENGTH_SHORT).show();
                 }
                 break;
 
@@ -298,6 +305,8 @@ public class HomeFragment extends Fragment implements DestaquesInterface, Procur
                             }
                         }
                     });
+                }else {
+                    Toast.makeText(getContext(), "Crie uma conta para utilizar o Carrinho", Toast.LENGTH_SHORT).show();
                 }
                 break;
 

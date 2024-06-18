@@ -117,6 +117,7 @@ public class CarrinhoFragment extends Fragment implements CarrinhoInterface{
                         quantDocs = snapshot.getCount();
                         if (quantDocs == 0) {
                             carrinhoVazio.setVisibility(VISIBLE);
+                            total.setText("R$ 0");
                         }
                     }
                 }

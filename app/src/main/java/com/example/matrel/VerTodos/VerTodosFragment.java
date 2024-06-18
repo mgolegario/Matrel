@@ -178,6 +178,8 @@ public class VerTodosFragment extends Fragment implements VerTodosInterface {
                             }
                         }
                     });
+                }else{
+                    Toast.makeText(getContext(), "Crie uma conta para utilizar os Favoritos", Toast.LENGTH_SHORT).show();
                 }
                 break;
 
@@ -214,6 +216,8 @@ public class VerTodosFragment extends Fragment implements VerTodosInterface {
                             }
                         }
                     });
+                }else {
+                    Toast.makeText(getContext(), "Crie uma conta para utilizar o Carrinho", Toast.LENGTH_SHORT).show();
                 }
                 break;
 

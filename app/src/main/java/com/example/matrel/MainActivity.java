@@ -3,6 +3,7 @@ package com.example.matrel;
 import static android.app.PendingIntent.getActivity;
 import static java.security.AccessController.getContext;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -121,7 +122,8 @@ public class MainActivity extends AppCompatActivity implements VerTodosInterface
 
                 }else{
                     Toast.makeText(MainActivity.this, "Crie uma conta para usar os Favoritos", Toast.LENGTH_SHORT).show();
-                    homeClicked();
+                    itemId = R.id.home;
+                    return false;
                 }
                 if (itemId == R.id.home){
                     return true;
@@ -243,6 +245,8 @@ carrinho.setOnClickListener(new View.OnClickListener() {
                 Bundle b = new Bundle();
                 b.putString("nome",destaquesModelList.get(position).getNome().toString());
                 loadFragmentBundle(new ProdutoFragment(), b);
+                searchBox.setText("");
+                searchBox.clearFocus();
                 break;
             case 1:
                 final HashMap<String, Object> favMap = new HashMap<>();

@@ -114,6 +114,8 @@ public class ProdutoFragment extends Fragment implements ProdutoInterface{
                         }
                     }
                 });
+            }else {
+                Toast.makeText(getContext(), "Crie uma conta para utilizar o Carrinho", Toast.LENGTH_SHORT).show();
             }
         }else if (qualApertou == 1){
 
@@ -148,6 +150,8 @@ public class ProdutoFragment extends Fragment implements ProdutoInterface{
                         }
                     }
                 });
+            }else{
+                Toast.makeText(getContext(), "Crie uma conta para utilizar os Favoritos", Toast.LENGTH_SHORT).show();
             }
         }
     }

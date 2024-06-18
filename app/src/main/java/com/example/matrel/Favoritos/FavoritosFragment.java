@@ -137,6 +137,8 @@ FirebaseAuth auth;
                             });
                         }
                     });
+                }else{
+                    Toast.makeText(getContext(), "Crie uma conta para utilizar os Favoritos", Toast.LENGTH_SHORT).show();
                 }
                 break;
             case 1:
@@ -171,6 +173,8 @@ FirebaseAuth auth;
                             }
                         }
                     });
+                }else{
+                    Toast.makeText(getContext(), "Crie uma conta para utilizar o Carrinho", Toast.LENGTH_SHORT).show();
                 }
                 break;
 
