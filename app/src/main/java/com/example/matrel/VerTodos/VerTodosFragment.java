@@ -25,6 +25,7 @@ import com.google.firebase.firestore.AggregateQuery;
 import com.google.firebase.firestore.AggregateQuerySnapshot;
 import com.google.firebase.firestore.AggregateSource;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -33,6 +34,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class VerTodosFragment extends Fragment implements VerTodosInterface {
 
@@ -81,7 +83,7 @@ public class VerTodosFragment extends Fragment implements VerTodosInterface {
 
         } else if (b.getString("categoria")!= null && b.getString("categoria").equals("maisProcurado")){
             categText.setText("Mais Procurados");
-            db.collection("TodosProdutos").whereEqualTo("maisProcurados", true)
+            db.collection("TodosProdutos").whereEqualTo("procurado", true)
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
@@ -101,6 +103,7 @@ public class VerTodosFragment extends Fragment implements VerTodosInterface {
             categText.setText(b.getString("departamento"));
             query("type",b.getString("departamento"));
         }
+
 
 
         return view;
@@ -186,6 +189,9 @@ public class VerTodosFragment extends Fragment implements VerTodosInterface {
                 carrinhoMap.put("quantidade", 1);
 
                 if (auth.getCurrentUser() != null) {
+                    final HashMap<String, Object> valorTotalMap = new HashMap<>();
+                    valorTotalMap.put("valorTotal", 0);
+                    db.collection("AddToCart").document(auth.getCurrentUser().getUid()).update(valorTotalMap);
                     Query query = db.collection("AddToCart").document(auth.getCurrentUser().getUid()).collection("CurrentUser").whereEqualTo("nome", destaquesModelList.get(position).getNome());
                     AggregateQuery countQuery = query.count();
                     countQuery.get(AggregateSource.SERVER).addOnCompleteListener(new OnCompleteListener<AggregateQuerySnapshot>() {

@@ -41,6 +41,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -71,74 +72,78 @@ public class CarrinhoFragment extends Fragment implements CarrinhoInterface{
         carrinhoVazio = view.findViewById(R.id.carrinhoVazio);
         total = view.findViewById(R.id.tv_Total);
 
+        final HashMap<String, Object> valorTotalMap = new HashMap<>();
+        valorTotalMap.put("valorTotal", 0);
+        db.collection("AddToCart").document(auth.getCurrentUser().getUid()).update(valorTotalMap);
+
         if (auth.getCurrentUser() != null) {
-            db.collection("AddToCart").document(auth.getCurrentUser().getUid())
-                    .collection("CurrentUser")
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
-                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                    CarrinhoModel carrinhoModel = document.toObject(CarrinhoModel.class);
-                                    carrinhoModelList.add(carrinhoModel);
-                                    carrinhoAdapter.notifyDataSetChanged();
+                db.collection("AddToCart").document(auth.getCurrentUser().getUid())
+                        .collection("CurrentUser")
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        CarrinhoModel carrinhoModel = document.toObject(CarrinhoModel.class);
+                                        carrinhoModelList.add(carrinhoModel);
+                                        carrinhoAdapter.notifyDataSetChanged();
+                                    }
+                                } else {
+                                    Toast.makeText(getActivity(), "Error" + task.getException(), Toast.LENGTH_SHORT).show();
                                 }
-                            } else {
-                                Toast.makeText(getActivity(), "Error" + task.getException(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+            }
+            if (auth.getCurrentUser() != null) {
+                db.collection("AddToCart").document(auth.getCurrentUser().getUid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                        String valor = value.get("valorTotal").toString();
+                        Float valorConv = Math.round(Float.parseFloat(valor) * 100) / 100.0F;
+                        total.setText("R$ " + valorConv);
+                    }
+                });
+            } else {
+                total.setText("R$ 0");
+            }
+            Query query = db.collection("AddToCart").document(auth.getCurrentUser().getUid()).collection("CurrentUser");
+            AggregateQuery countQuery = query.count();
+            countQuery.get(AggregateSource.SERVER).addOnCompleteListener(new OnCompleteListener<AggregateQuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<AggregateQuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        AggregateQuerySnapshot snapshot = task.getResult();
+                        quantDocs = snapshot.getCount();
+                        if (quantDocs == 0) {
+                            carrinhoVazio.setVisibility(VISIBLE);
+                        }
+                    }
+                }
+            });
+            btnCompra = view.findViewById(R.id.btn_compra_carrinho);
+
+            btnCompra.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Query query = db.collection("AddToCart").document(auth.getCurrentUser().getUid()).collection("CurrentUser");
+                    AggregateQuery countQuery = query.count();
+                    countQuery.get(AggregateSource.SERVER).addOnCompleteListener(new OnCompleteListener<AggregateQuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AggregateQuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                AggregateQuerySnapshot snapshot = task.getResult();
+                                quantDocs = snapshot.getCount();
+                                if (auth.getCurrentUser() != null && quantDocs != 0) {
+                                    loadFragment(new PaymentMethodFragment());
+                                } else {
+                                    Toast.makeText(getContext(), "O carrinho está vazio", Toast.LENGTH_SHORT).show();
+                                }
                             }
                         }
                     });
-        }
-        if (auth.getCurrentUser() != null) {
-            db.collection("AddToCart").document(auth.getCurrentUser().getUid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                @Override
-                public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                    String valor = value.get("valorTotal").toString();
-                    Float valorConv = Math.round(Float.parseFloat(valor) * 100) / 100.0F;
-                    total.setText("R$ " + valorConv);
                 }
             });
-        }else{
-            total.setText("R$ 0");
-        }
-        Query query = db.collection("AddToCart").document(auth.getCurrentUser().getUid()).collection("CurrentUser");
-        AggregateQuery countQuery = query.count();
-        countQuery.get(AggregateSource.SERVER).addOnCompleteListener(new OnCompleteListener<AggregateQuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<AggregateQuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    AggregateQuerySnapshot snapshot = task.getResult();
-                    quantDocs = snapshot.getCount();
-                    if (quantDocs == 0) {
-                        carrinhoVazio.setVisibility(VISIBLE);
-                    }
-                }
-            }
-        });
-        btnCompra = view.findViewById(R.id.btn_compra_carrinho);
-
-        btnCompra.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Query query = db.collection("AddToCart").document(auth.getCurrentUser().getUid()).collection("CurrentUser");
-                AggregateQuery countQuery = query.count();
-                countQuery.get(AggregateSource.SERVER).addOnCompleteListener(new OnCompleteListener<AggregateQuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AggregateQuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            AggregateQuerySnapshot snapshot = task.getResult();
-                            quantDocs = snapshot.getCount();
-                            if (auth.getCurrentUser() != null && quantDocs != 0) {
-                                loadFragment(new PaymentMethodFragment());
-                            } else {
-                                Toast.makeText(getContext(), "O carrinho está vazio", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    }
-                });
-            }
-        });
 
 
         return view;

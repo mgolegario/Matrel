@@ -34,15 +34,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class HomeFragment extends Fragment implements DestaquesInterface {
+public class HomeFragment extends Fragment implements DestaquesInterface, ProcuradosInterface {
 
-    RecyclerView destaquesRec;
+    RecyclerView destaquesRec, maisProcRec;
     FirebaseFirestore db;
     List<DestaquesModel> destaquesModelList;
+    List<DestaquesModel> procuradosModelList;
     DestaquesAdapter destaquesAdapter;
+    ProcuradosAdapter procuradosAdapter;
     long quantDocs;
     FirebaseAuth auth;
     LinearLayout verTodosdstq, verTodosmsprd;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,10 +56,15 @@ public class HomeFragment extends Fragment implements DestaquesInterface {
         db = FirebaseFirestore.getInstance();
         destaquesRec = v.findViewById(R.id.destaques_rec);
         auth = FirebaseAuth.getInstance();
+        maisProcRec = v.findViewById(R.id.procurados_rec);
+        maisProcRec.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false));
         destaquesRec.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false));
         destaquesModelList = new ArrayList<>();
+        procuradosModelList = new ArrayList<>();
         destaquesAdapter = new DestaquesAdapter(getActivity(), destaquesModelList, this);
+        procuradosAdapter = new ProcuradosAdapter(getActivity(), procuradosModelList, this);
         destaquesRec.setAdapter(destaquesAdapter);
+        maisProcRec.setAdapter(procuradosAdapter);
         verTodosdstq = v.findViewById(R.id.verTodosLLdstq);
         verTodosmsprd = v.findViewById(R.id.verTodosLLmsprd);
 
@@ -78,6 +86,23 @@ public class HomeFragment extends Fragment implements DestaquesInterface {
                     }
                 });
 
+        db.collection("TodosProdutos").whereEqualTo("procurado", true)
+                .limit(4)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                DestaquesModel procuradosModel = document.toObject(DestaquesModel.class);
+                                procuradosModelList.add(procuradosModel);
+                                procuradosAdapter.notifyDataSetChanged();
+                            }
+                        } else {
+                            Toast.makeText(getActivity(), "Error" + task.getException(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
 
         verTodosdstq.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -163,7 +188,9 @@ public class HomeFragment extends Fragment implements DestaquesInterface {
                 carrinhoMap.put("img_url", destaquesModelList.get(position).getImg_url());
                 carrinhoMap.put("quantidade", 1);
                 if (auth.getCurrentUser() != null) {
-
+                    final HashMap<String, Object> valorTotalMap = new HashMap<>();
+                    valorTotalMap.put("valorTotal", 0);
+                    db.collection("AddToCart").document(auth.getCurrentUser().getUid()).update(valorTotalMap);
                     Query query = db.collection("AddToCart").document(auth.getCurrentUser().getUid()).collection("CurrentUser").whereEqualTo("nome", destaquesModelList.get(position).getNome());
                     AggregateQuery countQuery = query.count();
                     countQuery.get(AggregateSource.SERVER).addOnCompleteListener(new OnCompleteListener<AggregateQuerySnapshot>() {
@@ -191,5 +218,89 @@ public class HomeFragment extends Fragment implements DestaquesInterface {
 
         }
 
+    }
+
+    @Override
+    public void onItemClickProcurado(int position, int index) {
+        switch (index){
+            case 0:
+                Bundle b = new Bundle();
+                b.putString("nome",procuradosModelList.get(position).getNome().toString());
+                loadFragment(new ProdutoFragment(), b);
+                break;
+            case 1:
+                final HashMap<String, Object> favMap = new HashMap<>();
+                favMap.put("nome", procuradosModelList.get(position).getNome());
+                favMap.put("preco", procuradosModelList.get(position).getPreco());
+                favMap.put("img_url", procuradosModelList.get(position).getImg_url());
+                favMap.put("avaliacoes", procuradosModelList.get(position).getAvaliacoes());
+                favMap.put("type", procuradosModelList.get(position).getType());
+                favMap.put("destaque", procuradosModelList.get(position).getDestaque());
+                favMap.put("procurado", procuradosModelList.get(position).getProcurado());
+                if (auth.getCurrentUser() != null ) {
+
+                    Query query = db.collection("Favoritos").document(auth.getCurrentUser().getUid()).collection("CurrentUser").whereEqualTo("nome", procuradosModelList.get(position).getNome());
+                    AggregateQuery countQuery = query.count();
+                    countQuery.get(AggregateSource.SERVER).addOnCompleteListener(new OnCompleteListener<AggregateQuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AggregateQuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                AggregateQuerySnapshot snapshot = task.getResult();
+                                quantDocs = snapshot.getCount();
+                                if (quantDocs == 0) {
+                                    db.collection("Favoritos").document(auth.getCurrentUser().getUid())
+                                            .collection("CurrentUser").add(favMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<DocumentReference> task) {
+                                                    Toast.makeText(getContext(), "Adicionado aos favoritos", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+                                }else{
+                                    Toast.makeText(getContext(), "O produto já foi adicionado aos favoritos", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        }
+                    });
+
+
+                }
+                break;
+
+            case 2:
+                final HashMap<String, Object> carrinhoMap = new HashMap<>();
+                carrinhoMap.put("nome", procuradosModelList.get(position).getNome());
+                carrinhoMap.put("preco", procuradosModelList.get(position).getPreco());
+                carrinhoMap.put("img_url", procuradosModelList.get(position).getImg_url());
+                carrinhoMap.put("quantidade", 1);
+                if (auth.getCurrentUser() != null) {
+                    final HashMap<String, Object> valorTotalMap = new HashMap<>();
+                    valorTotalMap.put("valorTotal", 0);
+                    db.collection("AddToCart").document(auth.getCurrentUser().getUid()).update(valorTotalMap);
+                    Query query = db.collection("AddToCart").document(auth.getCurrentUser().getUid()).collection("CurrentUser").whereEqualTo("nome", procuradosModelList.get(position).getNome());
+                    AggregateQuery countQuery = query.count();
+                    countQuery.get(AggregateSource.SERVER).addOnCompleteListener(new OnCompleteListener<AggregateQuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AggregateQuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                AggregateQuerySnapshot snapshot = task.getResult();
+                                quantDocs = snapshot.getCount();
+                                if (quantDocs == 0) {
+                                    db.collection("AddToCart").document(auth.getCurrentUser().getUid())
+                                            .collection("CurrentUser").add(carrinhoMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<DocumentReference> task) {
+                                                    Toast.makeText(getContext(), "Adicionado ao carrinho", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+                                }else{
+                                    Toast.makeText(getContext(), "O produto já foi adicionado ao carrinho", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        }
+                    });
+                }
+                break;
+
+        }
     }
 }

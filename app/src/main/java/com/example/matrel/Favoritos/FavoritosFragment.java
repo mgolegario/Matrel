@@ -146,6 +146,9 @@ FirebaseAuth auth;
                 carrinhoMap.put("img_url", destaquesModelList.get(position).getImg_url());
                 carrinhoMap.put("quantidade", 1);
                 if (auth.getCurrentUser() != null) {
+                    final HashMap<String, Object> valorTotalMap = new HashMap<>();
+                    valorTotalMap.put("valorTotal", 0);
+                    db.collection("AddToCart").document(auth.getCurrentUser().getUid()).update(valorTotalMap);
                     Query query = db.collection("AddToCart").document(auth.getCurrentUser().getUid()).collection("CurrentUser").whereEqualTo("nome", destaquesModelList.get(position).getNome());
                     AggregateQuery countQuery = query.count();
                     countQuery.get(AggregateSource.SERVER).addOnCompleteListener(new OnCompleteListener<AggregateQuerySnapshot>() {

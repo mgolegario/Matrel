@@ -106,9 +106,10 @@ public class MainActivity extends AppCompatActivity implements VerTodosInterface
                 }else if (itemId == R.id.departamentos){
                     tvHeader.setText("Departamentos");
                     departamentosClicked();
-                } else if (itemId == R.id.favoritos){
+                } else if (itemId == R.id.favoritos && auth.getCurrentUser() != null){
                     tvHeader.setText("Favoritos");
                     favoritosClicked();
+
                 }else if (itemId == R.id.conta){
                     tvHeader.setText("Conta");
                     if(auth.getCurrentUser() != null){
@@ -118,12 +119,15 @@ public class MainActivity extends AppCompatActivity implements VerTodosInterface
                         loginClicked();
                     }
 
+                }else{
+                    Toast.makeText(MainActivity.this, "Crie uma conta para usar os Favoritos", Toast.LENGTH_SHORT).show();
+                    homeClicked();
                 }
                 if (itemId == R.id.home){
                     return true;
                 }else if (itemId == R.id.departamentos){
                     return true;
-                } else if (itemId == R.id.favoritos){
+                } else if (itemId == R.id.favoritos && auth.getCurrentUser() != null){
                     return true;
                 }else if (itemId == R.id.conta) {
                     return true;
@@ -169,7 +173,11 @@ public class MainActivity extends AppCompatActivity implements VerTodosInterface
 carrinho.setOnClickListener(new View.OnClickListener() {
     @Override
     public void onClick(View v) {
-        loadFragment(new CarrinhoFragment());
+        if(auth.getCurrentUser() != null) {
+            loadFragment(new CarrinhoFragment());
+        }else{
+            Toast.makeText(MainActivity.this, "Crie uma conta para utilizar o Carrinho", Toast.LENGTH_SHORT).show();
+        }
     }
 });
 
