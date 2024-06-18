@@ -21,6 +21,7 @@ import com.google.firebase.firestore.AggregateQuery;
 import com.google.firebase.firestore.AggregateQuerySnapshot;
 import com.google.firebase.firestore.AggregateSource;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -91,7 +92,12 @@ public class ProdutoFragment extends Fragment implements ProdutoInterface{
             if (auth.getCurrentUser() != null) {
                 final HashMap<String, Object> valorTotalMap = new HashMap<>();
                 valorTotalMap.put("valorTotal", 0);
-                db.collection("AddToCart").document(auth.getCurrentUser().getUid()).update(valorTotalMap);
+                db.collection("AddToCart").document(auth.getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        task.getResult().getReference().set(valorTotalMap);
+                    }
+                });
                 Query query = db.collection("AddToCart").document(auth.getCurrentUser().getUid()).collection("CurrentUser").whereEqualTo("nome", produtoModelList.get(position).getNome());
                 AggregateQuery countQuery = query.count();
                 countQuery.get(AggregateSource.SERVER).addOnCompleteListener(new OnCompleteListener<AggregateQuerySnapshot>() {

@@ -150,7 +150,12 @@ FirebaseAuth auth;
                 if (auth.getCurrentUser() != null) {
                     final HashMap<String, Object> valorTotalMap = new HashMap<>();
                     valorTotalMap.put("valorTotal", 0);
-                    db.collection("AddToCart").document(auth.getCurrentUser().getUid()).update(valorTotalMap);
+                    db.collection("AddToCart").document(auth.getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            task.getResult().getReference().set(valorTotalMap);
+                        }
+                    });
                     Query query = db.collection("AddToCart").document(auth.getCurrentUser().getUid()).collection("CurrentUser").whereEqualTo("nome", destaquesModelList.get(position).getNome());
                     AggregateQuery countQuery = query.count();
                     countQuery.get(AggregateSource.SERVER).addOnCompleteListener(new OnCompleteListener<AggregateQuerySnapshot>() {

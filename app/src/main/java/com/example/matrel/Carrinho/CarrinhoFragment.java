@@ -72,9 +72,6 @@ public class CarrinhoFragment extends Fragment implements CarrinhoInterface{
         carrinhoVazio = view.findViewById(R.id.carrinhoVazio);
         total = view.findViewById(R.id.tv_Total);
 
-        final HashMap<String, Object> valorTotalMap = new HashMap<>();
-        valorTotalMap.put("valorTotal", 0);
-        db.collection("AddToCart").document(auth.getCurrentUser().getUid()).update(valorTotalMap);
 
         if (auth.getCurrentUser() != null) {
                 db.collection("AddToCart").document(auth.getCurrentUser().getUid())

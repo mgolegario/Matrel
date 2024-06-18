@@ -176,7 +176,17 @@ carrinho.setOnClickListener(new View.OnClickListener() {
     @Override
     public void onClick(View v) {
         if(auth.getCurrentUser() != null) {
-            loadFragment(new CarrinhoFragment());
+            final HashMap<String, Object> valorTotalMap = new HashMap<>();
+            valorTotalMap.put("valorTotal", 0);
+            db.collection("AddToCart").document(auth.getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    task.getResult().getReference().set(valorTotalMap);
+                    loadFragment(new CarrinhoFragment());
+                }
+            });
+
+
         }else{
             Toast.makeText(MainActivity.this, "Crie uma conta para utilizar o Carrinho", Toast.LENGTH_SHORT).show();
         }
@@ -275,6 +285,15 @@ carrinho.setOnClickListener(new View.OnClickListener() {
                 carrinhoMap.put("img_url", destaquesModelList.get(position).getImg_url());
                 carrinhoMap.put("quantidade", 1);
                 if (auth.getCurrentUser() != null) {
+                    final HashMap<String, Object> valorTotalMap = new HashMap<>();
+                    valorTotalMap.put("valorTotal", 0);
+                    db.collection("AddToCart").document(auth.getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            task.getResult().getReference().set(valorTotalMap);
+                        }
+                    });
+
                     db.collection("AddToCart").document(auth.getCurrentUser().getUid())
                             .collection("CurrentUser").add(carrinhoMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                                 @Override
